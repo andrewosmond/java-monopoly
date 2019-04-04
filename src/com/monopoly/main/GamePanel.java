@@ -43,9 +43,7 @@ public class GamePanel extends JPanel implements Runnable{
 		setLayout(null);
 		Database.initProperty();
 		Database.initButton();
-		for (JButton btn : Database.getButtonsList()) {
-			this.add(btn);
-		}
+		
 		setTileButton(false);
 		
 		addKeyListener(keyListener);
@@ -57,7 +55,13 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void setTileButton(boolean b) {
 		for (JButton btn : Database.getButtonsList()) {
-			btn.setEnabled(b);
+			this.remove(btn);
+		}
+		
+		if (b) {
+			for (JButton btn : Database.getButtonsList()) {
+				this.add(btn);
+			}
 		}
 	}
 	
@@ -98,7 +102,7 @@ public class GamePanel extends JPanel implements Runnable{
 		int frames = 0;
 		long timer = System.currentTimeMillis();
 		while(running) {
-			//will be the game 
+			//will be the game
 			now = System.nanoTime();
 			diff += (now - prev) / limit;
 			prev = now;
@@ -122,9 +126,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void paint(Graphics g) {
 		super.paint(g);
 		if(currState == STATE.MENU) {
-			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawImage(title.getImage(), 0, 0, null);
-			g.drawString("X : " + coorX + " Y: " + coorY, 1080, 80);
 		}
 		if(currState == STATE.GAME) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
