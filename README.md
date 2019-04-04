@@ -4,7 +4,7 @@ Class Diagram :
 
 ![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/MonopolyClassDiagram.JPG)
 
-Deskripsi Tema :
+## Deskripsi Tema :
 
 Monopoly ini berukuran 8 x 8 seperti game monopoly Line Get Rich. Terdapat fitur seperti kartu kesempatan, penjara, chest (terakumulasi gold setiap turn pemain), dan go to jail.
 
@@ -12,7 +12,7 @@ Setiap pemain dapat memilih character (sprite) masing-masing saat bermain monopo
 
 Pemain dapat mengklik tile monopoly untuk melihat informasi kotak, seperti informasi City, Island, ataupun kotak START, JAIL, CHEST, dan GO TO JAIL. Nantinya, saat gameplay pemain juga dapat mengambil alih City pemain lain ketika belum menjadi Landmark. Permainan akan berakhir setelah 30 turn.
 
-Sekai Monopoly
+## Sekai Monopoly
 
 Ketua :
 
