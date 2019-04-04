@@ -11,18 +11,29 @@ import com.monopoly.model.Property;
 import com.monopoly.utility.MoneyFormatter;
 
 public class InfoWindow extends JFrame {
-	private static final long serialVersionUID = 1L;
 	private static InfoWindow instance = new InfoWindow();
-	private static enum STATE{
+	public static enum STATE{
 		CITY,
-		ISLAND
+		ISLAND,
+		CHANCECARD,
+		CHEST,
+		GOTOJAIL,
+		JAIL,
+		MEDICALBILL,
+		START
 	};
-	private static STATE State = null;
+	private static STATE currState = null;
 	private static Property property = null;
 	
 	private ImageIcon cityWindow = new ImageIcon("assets/cityInfoWindow.png");
 	private ImageIcon islandWindow = new ImageIcon("assets/islandInfoWindow.png");
 	private ImageIcon tilesSprite = new ImageIcon("assets/tiles.png");
+	private ImageIcon chanceCardWindow = new ImageIcon("assets/chanceCardWindow.png");
+	private ImageIcon chestWindow = new ImageIcon("assets/chestWindow.png");
+	private ImageIcon goToJailWindow = new ImageIcon("assets/goToJailWindow.png");
+	private ImageIcon jailWindow = new ImageIcon ("assets/jailWindow.png");
+	private ImageIcon medicalBillWindow = new ImageIcon ("assets/medicalBillWindow.png");
+	private ImageIcon startWindow = new ImageIcon("assets/startWindow.png");
 	
 	private InfoWindow() {
 		setSize(500, 400);
@@ -34,16 +45,45 @@ public class InfoWindow extends JFrame {
 	public static InfoWindow getInstance() {
 		return instance;
 	}
+
+	public static void setState(STATE currState) {
+		InfoWindow.currState = currState;
+	}
 	
+	public static void view() {
+		switch(currState) {
+		case CHANCECARD:
+			instance.setTitle("Chance Card Information");
+			break;
+		case CHEST:
+			instance.setTitle("Chest Information");
+			break;
+		case GOTOJAIL:
+			instance.setTitle("Go to Jail Information");
+			break;
+		case JAIL:
+			instance.setTitle("Jail Information");
+			break;
+		case MEDICALBILL:
+			instance.setTitle("Medical Bill Information");
+			break;
+		case START:
+			instance.setTitle("Start Information");
+			break;
+		}
+		instance.repaint();
+		instance.setVisible(true);
+	}
+
 	public static void view(Property property) {
 		InfoWindow.property = property;
 		if (property instanceof City) {
-			State = STATE.CITY;
+			currState = currState.CITY;
 			instance.setTitle("City Information");
 			instance.repaint();
 			instance.setVisible(true);
 		} else if (property instanceof Island) {
-			State = STATE.ISLAND;
+			currState = currState.ISLAND;
 			instance.setTitle("Island Information");
 			instance.repaint();
 			instance.setVisible(true);
@@ -56,7 +96,8 @@ public class InfoWindow extends JFrame {
 		int x = tilesSprite.getIconWidth() / 6;
 		int y = tilesSprite.getIconHeight() / 5;
 		
-		if (State == STATE.CITY) {
+		switch(currState) {
+		case CITY:
 			g.drawImage(cityWindow.getImage(), 0, 16, null);
 			
 			g.drawImage(tilesSprite.getImage(), 44, 115, 44+x, 115+y, 
@@ -87,8 +128,8 @@ public class InfoWindow extends JFrame {
 			} else {
 				g.drawString(MoneyFormatter.getFormat(city.getRentFee()), 320, 370);
 			}
-			
-		} else if (State == STATE.ISLAND) {
+			break;
+		case ISLAND:
 			g.drawImage(islandWindow.getImage(), 0, 16, null);
 			
 			g.drawImage(tilesSprite.getImage(), 44, 115, 44+x, 115+y, 
@@ -108,6 +149,26 @@ public class InfoWindow extends JFrame {
 			} else {
 				g.drawString(MoneyFormatter.getFormat(island.getRentFee()), 335, 370);
 			}
+			break;
+		case CHANCECARD:
+			g.drawImage(chanceCardWindow.getImage(), 0, 16, null);
+			break;
+		case CHEST:
+			g.drawImage(chestWindow.getImage(), 0, 16, null);
+			break;
+		case GOTOJAIL:
+			g.drawImage(goToJailWindow.getImage(), 0, 16, null);
+			break;
+		case JAIL:
+			g.drawImage(jailWindow.getImage(), 0, 16, null);
+			break;
+		case MEDICALBILL:
+			g.drawImage(medicalBillWindow.getImage(), 0, 16, null);
+			break;
+		case START:
+			g.drawImage(startWindow.getImage(), 0, 16, null);
+			break;
 		}
+		
 	}
 }
