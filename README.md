@@ -9,3 +9,5 @@ Alexius :
 - Membuat class diagram
 
 Edrio :
+- Assets : titleBG.jpg, transition.gif
+- Code : Membuat tampilan transisi awal, menambahkan menu play, help, exit (help blm berfungsi).
