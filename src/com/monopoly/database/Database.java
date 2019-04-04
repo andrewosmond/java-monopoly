@@ -12,6 +12,7 @@ import com.monopoly.model.Island;
 import com.monopoly.model.Property;
 import com.monopoly.utility.PolygonButton;
 import com.monopoly.window.InfoWindow;
+import com.monopoly.window.InfoWindow.STATE;
 
 public class Database {
 	private static Vector<JButton> buttonList = new Vector<JButton>();
@@ -47,6 +48,12 @@ public class Database {
 		 polygon.addPoint(509,642);
 		 polygon.addPoint(580,598);
 		 btn = new PolygonButton(polygon, "Start");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.START);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		  
 		 // Beijing Button
@@ -64,13 +71,13 @@ public class Database {
 		 polygon.addPoint(453,525);
 		 polygon.addPoint(392,558);
 		 polygon.addPoint(349,534);
+		 btn = new PolygonButton(polygon, "Chance");
 		 btn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//Chance button
+					InfoWindow.setState(STATE.CHANCECARD);
+					InfoWindow.view();
 				}
 			});
-		 btn = new PolygonButton(polygon, "Chance");
-		 
 		 buttonList.add(btn);
 		 
 		 // Bangkok Button
@@ -125,6 +132,12 @@ public class Database {
 		 polygon.addPoint(82,392);
 		 polygon.addPoint(9,352);
 		 btn = new PolygonButton(polygon, "Jail");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.JAIL);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Papua Button
@@ -161,6 +174,12 @@ public class Database {
 		 polygon.addPoint(352,236);
 		 polygon.addPoint(309,261);
 		 btn = new PolygonButton(polygon, "Chance");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.CHANCECARD);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Singapore Button
@@ -197,6 +216,12 @@ public class Database {
 		 polygon.addPoint(575,104);
 		 polygon.addPoint(508,146);
 		 btn = new PolygonButton(polygon, "Chest");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.CHEST);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Prague Button
@@ -233,6 +258,12 @@ public class Database {
 		 polygon.addPoint(769,225);
 		 polygon.addPoint(707,259);
 		 btn = new PolygonButton(polygon, "Chance");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.CHANCECARD);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Moscow Button
@@ -262,13 +293,19 @@ public class Database {
 		 btn = new PolygonButton(polygon, "Rome");
 		 buttonList.add(btn);
 		 
-		 // Loli Police Button
+		 // Go to Jail Button
 		 polygon = new Polygon();
 		 polygon.addPoint(863,351);
 		 polygon.addPoint(934,312);
 		 polygon.addPoint(1003,352);
 		 polygon.addPoint(932,390);
-		 btn = new PolygonButton(polygon, "Loli Police");
+		 btn = new PolygonButton(polygon, "Go to Jail");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.GOTOJAIL);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Bintan Button
@@ -305,6 +342,12 @@ public class Database {
 		 polygon.addPoint(770,476);
 		 polygon.addPoint(727,499);
 		 btn = new PolygonButton(polygon, "Chance");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.CHANCECARD);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // New York Button
@@ -323,6 +366,12 @@ public class Database {
 		 polygon.addPoint(670,534);
 		 polygon.addPoint(626,559);
 		 btn = new PolygonButton(polygon, "Medical Bill");
+		 btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					InfoWindow.setState(STATE.MEDICALBILL);
+					InfoWindow.view();
+				}
+			});
 		 buttonList.add(btn);
 		 
 		 // Jakarta Button
@@ -374,8 +423,8 @@ public class Database {
 		propertyList.add(new City(2, 5, "Jakarta", 200000, 80000, 240000, 400000, 400000));
 		
 		propertyList.add(new Island(3, 0, "Phuket", 70500));
-		propertyList.add(new Island(3, 1, "Papua", 70500));
-		propertyList.add(new Island(3, 2, "Bali", 70500));
+		propertyList.add(new Island(3, 1, "Bali", 70500));
+		propertyList.add(new Island(3, 2, "Papua", 70500));
 		propertyList.add(new Island(3, 3, "Hawaii", 70500));
 		propertyList.add(new Island(3, 4, "Bintan", 70500));
 	}
