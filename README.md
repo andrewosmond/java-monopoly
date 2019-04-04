@@ -1,5 +1,10 @@
 # java-monopoly
-Game Project for OOP Course
+
+Class Diagram :
+
+![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/MonopolyClassDiagram.JPG)
+
+Deskripsi Tema :
 
 Monopoly ini berukuran 8 x 8 seperti game monopoly Line Get Rich. Terdapat fitur seperti kartu kesempatan, penjara, chest (terakumulasi gold setiap turn pemain), dan go to jail.
 
