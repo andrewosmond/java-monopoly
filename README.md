@@ -27,8 +27,8 @@ Anggota :
 
 ## 4 April 2019
 Andrew :
-- Assets : cityInfoWindow.png, islandInfoWindow.png, map.png, tiles.png
-- Code : Menampilkan gambar papan Monopoly, tiles monopoly diklik dapat menampilkan city / island info.
+- Assets : cityInfoWindow.png, islandInfoWindow.png, map.png, tiles.png, chanceCardWindow.png, chestWindow.png, goToJailWindow.png, jailWindow.png, medicalBillWindow.png, startWindow.png
+- Code : Menampilkan gambar papan Monopoly, setiap tiles monopoly dapat diklik dan menampilkan informasi tilesnya masing-masing, seperti detail City, Island, ChanceCard, Chest, GoToJail, Jail, MedicalBill, dan Start.
 
 Alexius :
 - Membuat class diagram
