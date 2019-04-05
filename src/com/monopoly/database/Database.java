@@ -1,8 +1,12 @@
 package com.monopoly.database;
 
+import java.awt.Cursor;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -391,7 +395,13 @@ public class Database {
 						 InfoWindow.view(propertyList.get(index));
 					 }
 				 }
-			 }); 
+			 });
+			 jButton.addMouseMotionListener(new MouseMotionListener() {
+				public void mouseMoved(MouseEvent e) {
+					 jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				}
+				public void mouseDragged(MouseEvent e) {}
+			});
 		 }
 	}
 	
