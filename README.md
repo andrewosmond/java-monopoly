@@ -36,3 +36,8 @@ Alexius :
 Edrio :
 - Assets : titleBG.jpg, transition.gif
 - Code : Membuat tampilan transisi awal, menambahkan menu play, help, exit (help blm berfungsi).
+
+## 5 April 2019
+Andrew :
+- Assets : Update map UI (map.png), perbaiki grammar (chanceCardWindow.png, startWindow.png, medicalBillWindow.png)
+- Code : Cursor berubah saat mendekati tiles, menambahkan class Chest, test fitur Chest di gamePanel, menambahkan mouseListener pada button (di class Database).
