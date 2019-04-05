@@ -13,11 +13,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import com.monopoly.database.Database;
+import com.monopoly.model.Chest;
 
 public class GamePanel extends JPanel implements Runnable{
 	
 	// game status enumeration
-	private static enum STATE{
+	public static enum STATE{
 		TRANSITION,
 		GAME,
 		HELP,
@@ -38,6 +39,9 @@ public class GamePanel extends JPanel implements Runnable{
 	private int coorX;
 	private int coorY;
 	
+	// objects
+	private Chest chest;
+	
 	// View buttons : comment setLayout & uncomment btnPaint
 	public GamePanel() {
 		setLayout(null);
@@ -45,6 +49,9 @@ public class GamePanel extends JPanel implements Runnable{
 		Database.initButton();
 		
 		setTileButton(false);
+		
+		chest = new Chest();
+		chest.setMoney(500000);
 		
 		addKeyListener(keyListener);
 		addMouseListener(mouseListener);
@@ -133,6 +140,7 @@ public class GamePanel extends JPanel implements Runnable{
 			g.drawString("Cursor Coordinate : ", 1080, 50);
 			g.drawImage(map.getImage(), 0, 0, null);
 			g.drawString("X : " + coorX + " Y: " + coorY, 1080, 80);
+			chest.render(g);
 		}
 		if(currState == STATE.TRANSITION) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -175,7 +183,9 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		public void mouseExited(MouseEvent e) {}
 		
-		public void mouseEntered(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {
+			
+		}
 	
 		public void mouseClicked(MouseEvent e) {
 			if(currState == STATE.MENU) {
