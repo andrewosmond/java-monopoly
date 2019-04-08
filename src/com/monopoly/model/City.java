@@ -1,19 +1,28 @@
 package com.monopoly.model;
 
-public class City extends Property{
+import java.awt.Graphics;
+
+import com.monopoly.main.GamePanel;
+
+public class City extends Property {
 	private long landPrice;
 	private long housePrice;
 	private long buildingPrice;
 	private long hotelPrice;
 	private long landmarkPrice;
-	
-	private boolean isLandBought = false;
-	private boolean isHouseBought = false;
-	private boolean isBuildingBought = false;
-	private boolean isHotelBought = false;
-	private boolean isLandmarkBought = false;
-	
-	public City(int tilesRow, int tilesCol, String name, long landPrice, long housePrice, long buildingPrice, long hotelPrice, long landmarkPrice) {
+
+	private boolean landBought = false;
+	private boolean houseBought = false;
+	private boolean buildingBought = false;
+	private boolean hotelBought = false;
+	private boolean landmarkBought = false;
+
+	public City(DIRECTION direction, int coorX, int coorY, int tilesRow, int tilesCol, String name, long landPrice,
+			long housePrice, long buildingPrice, long hotelPrice, long landmarkPrice) {
+		this.direction = direction;
+		this.coorX = coorX;
+		this.coorY = coorY;
+		this.owner = null;
 		this.tilesRow = tilesRow;
 		this.tilesCol = tilesCol;
 		this.name = name;
@@ -28,42 +37,42 @@ public class City extends Property{
 		owner = p;
 		owner.addProperty(this);
 	}
-	
+
 	public void sell() {
 		owner.setMoney(owner.getMoney() + getSellValue());
 		owner.removeProperty(this);
 		owner = null;
-		isLandBought = false;
-		isHouseBought = false;
-		isBuildingBought = false;
-		isHotelBought = false;
-		isLandmarkBought = false;
+		landBought = false;
+		houseBought = false;
+		buildingBought = false;
+		hotelBought = false;
+		landmarkBought = false;
 	}
-	
-	public long countTotalPrice() {
+
+	public long getPropertyValue() {
 		long res = 0;
-		res += (isLandBought) ? landPrice : 0;
-		res += (isHouseBought) ? housePrice : 0;
-		res += (isBuildingBought) ? buildingPrice : 0;
-		res += (isHotelBought) ? hotelPrice : 0;
-		res += (isLandmarkBought) ? landmarkPrice : 0;
+		res += (landBought) ? landPrice : 0;
+		res += (houseBought) ? housePrice : 0;
+		res += (buildingBought) ? buildingPrice : 0;
+		res += (hotelBought) ? hotelPrice : 0;
+		res += (landmarkBought) ? landmarkPrice : 0;
 		return res;
 	}
-	
+
 	public boolean isTakeOverAble() {
-		return !isLandmarkBought;
+		return !landmarkBought;
 	}
-	
+
 	public long getSellValue() {
-		return (long)((double)countTotalPrice() * 0.75);
+		return (long) ((double) getPropertyValue() * 0.75);
 	}
-	
+
 	public long getTakeOverFee() {
-		return (long)((double)countTotalPrice() * 2.00);
+		return (long) ((double) getPropertyValue() * 2.00);
 	}
-	
+
 	public long getRentFee() {
-		return (long)((double)countTotalPrice() * 1.25);
+		return (long) ((double) getPropertyValue() * 1.25) * multiplier;
 	}
 
 	public long getLandPrice() {
@@ -81,48 +90,97 @@ public class City extends Property{
 	public long getHotelPrice() {
 		return hotelPrice;
 	}
-	
+
 	public long getLandmarkPrice() {
 		return landmarkPrice;
 	}
 
 	public boolean isLandBought() {
-		return isLandBought;
+		return landBought;
 	}
 
-	public void setLandBought(boolean isLandBought) {
-		this.isLandBought = isLandBought;
+	public void setLandBought(boolean landBought) {
+		this.landBought = landBought;
 	}
 
 	public boolean isHouseBought() {
-		return isHouseBought;
+		return houseBought;
 	}
 
-	public void setHouseBought(boolean isHouseBought) {
-		this.isHouseBought = isHouseBought;
+	public void setHouseBought(boolean houseBought) {
+		this.houseBought = houseBought;
 	}
 
 	public boolean isBuildingBought() {
-		return isBuildingBought;
+		return buildingBought;
 	}
 
-	public void setBuildingBought(boolean isBuildingBought) {
-		this.isBuildingBought = isBuildingBought;
+	public void setBuildingBought(boolean buildingBought) {
+		this.buildingBought = buildingBought;
 	}
 
 	public boolean isHotelBought() {
-		return isHotelBought;
+		return hotelBought;
 	}
 
-	public void setHotelBought(boolean isHotelBought) {
-		this.isHotelBought = isHotelBought;
+	public void setHotelBought(boolean hotelBought) {
+		this.hotelBought = hotelBought;
 	}
 
 	public boolean isLandmarkBought() {
-		return isLandmarkBought;
+		return landmarkBought;
 	}
 
-	public void setLandmarkBought(boolean isLandmarkBought) {
-		this.isLandmarkBought = isLandmarkBought;
+	public void setLandmarkBought(boolean landmarkBought) {
+		this.landmarkBought = landmarkBought;
+	}
+
+	public void render(Graphics g, GamePanel gamePanel) {
+		int x = gamePanel.getProperty().getIconWidth() / 4;
+		int y = gamePanel.getProperty().getIconHeight() / 12;
+
+		if (owner == null) return;
+
+		int playerColor = gamePanel.getPlayerList().indexOf(owner);
+		int landIdx = 0;
+		int houseIdx = 0;
+		int buildingIdx = 0;
+		int hotelIdx = 0;
+		int landmarkIdx = 0;
+
+		if (direction == DIRECTION.LEFT) {
+			landIdx = 6;
+			houseIdx = 7;
+			buildingIdx = 8;
+			hotelIdx = 9;
+			landmarkIdx = 10;
+		} else if (direction == DIRECTION.RIGHT) {
+			landIdx = 0;
+			houseIdx = 1;
+			buildingIdx = 2;
+			hotelIdx = 3;
+			landmarkIdx = 4;
+		}
+
+		if (landmarkBought) {
+			g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+					y * landmarkIdx, x * playerColor + x, y * landmarkIdx + y, null);
+		} else if (hotelBought || buildingBought || houseBought) {
+			if (hotelBought) {
+				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+						y * hotelIdx, x * playerColor + x, y * hotelIdx + y, null);
+			}
+			if (buildingBought) {
+				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+						y * buildingIdx, x * playerColor + x, y * buildingIdx + y, null);
+			}
+			if (houseBought) {
+				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+						y * houseIdx, x * playerColor + x, y * houseIdx + y, null);
+			}
+		} else if (landBought) {
+			g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+					y * landIdx, x * playerColor + x, y * landIdx + y, null);
+		}
 	}
 }

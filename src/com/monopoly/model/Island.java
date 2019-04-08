@@ -1,10 +1,18 @@
 package com.monopoly.model;
 
+import java.awt.Graphics;
+
+import com.monopoly.main.GamePanel;
+
 public class Island extends Property{
 	private long price;
 	private final long rent = 80000;
 	
-	public Island(int tilesRow, int tilesCol, String name, long price) {
+	public Island(DIRECTION direction, int coorX, int coorY, int tilesRow, int tilesCol, String name, long price) {
+		this.direction = direction;
+		this.coorX = coorX;
+		this.coorY = coorY;
+		this.owner = null;
 		this.tilesRow = tilesRow;
 		this.tilesCol = tilesCol;
 		this.name = name;
@@ -23,6 +31,10 @@ public class Island extends Property{
 		owner.setIslandCount(owner.getIslandCount() - 1);
 		owner.removeProperty(this);
 		owner = null;
+	}
+	
+	public long getPropertyValue() {
+		return price;
 	}
 
 	public boolean isTakeOverAble() {
@@ -50,5 +62,24 @@ public class Island extends Property{
 		int islandCount = owner.getIslandCount();
 		long res = islandCount >= 3 ? rent * 3 : rent * islandCount;
 		return res;
+	}
+
+	public void render(Graphics g, GamePanel gamePanel) {
+		int x = gamePanel.getProperty().getIconWidth() / 4;
+		int y = gamePanel.getProperty().getIconHeight() / 12;
+	
+		if (owner == null) return;
+		
+		int playerColor = gamePanel.getPlayerList().indexOf(owner);
+		int islandIdx = 0;
+		
+		if (direction == DIRECTION.LEFT) {
+			islandIdx = 11;
+		} else if (direction == DIRECTION.RIGHT) {
+			islandIdx = 5;
+		}
+		
+		g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+				y * islandIdx, x * playerColor + x, y * islandIdx + y, null);
 	}
 }

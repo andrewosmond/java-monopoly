@@ -1,14 +1,16 @@
 package com.monopoly.model;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
 import com.monopoly.utility.MoneyFormatter;
 
-public class Chest {
+public class Chest extends Tiles{
 	private long money;
 	
 	public Chest() {
+		this.name = "Chest";
 		money = 0;
 	}
 	
@@ -34,6 +36,7 @@ public class Chest {
 	}
 
 	public void render(Graphics g) {
+		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.PLAIN, 20));
 		if (money == 0) {
 			g.drawString(MoneyFormatter.getFormat(money), 506, 258);

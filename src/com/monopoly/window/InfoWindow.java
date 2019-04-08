@@ -2,6 +2,8 @@ package com.monopoly.window;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -10,17 +12,11 @@ import com.monopoly.model.Island;
 import com.monopoly.model.Property;
 import com.monopoly.utility.MoneyFormatter;
 
+@SuppressWarnings("serial")
 public class InfoWindow extends JFrame {
 	private static InfoWindow instance = new InfoWindow();
 	public static enum STATE{
-		CITY,
-		ISLAND,
-		CHANCECARD,
-		CHEST,
-		GOTOJAIL,
-		JAIL,
-		MEDICALBILL,
-		START
+		CITY, ISLAND, CHANCECARD, CHEST, GOTOJAIL, JAIL, MEDICALBILL, START
 	};
 	private static STATE currState = null;
 	private static Property property = null;
@@ -78,12 +74,12 @@ public class InfoWindow extends JFrame {
 	public static void view(Property property) {
 		InfoWindow.property = property;
 		if (property instanceof City) {
-			currState = currState.CITY;
+			currState = STATE.CITY;
 			instance.setTitle("City Information");
 			instance.repaint();
 			instance.setVisible(true);
 		} else if (property instanceof Island) {
-			currState = currState.ISLAND;
+			currState = STATE.ISLAND;
 			instance.setTitle("Island Information");
 			instance.repaint();
 			instance.setVisible(true);
@@ -92,6 +88,17 @@ public class InfoWindow extends JFrame {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
+		
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		int x = tilesSprite.getIconWidth() / 6;
 		int y = tilesSprite.getIconHeight() / 5;
