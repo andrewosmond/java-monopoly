@@ -41,3 +41,9 @@ Edrio :
 Andrew :
 - Assets : Update map UI (map.png), perbaiki grammar (chanceCardWindow.png, startWindow.png, medicalBillWindow.png)
 - Code : Cursor berubah saat mendekati tiles, menambahkan class Chest, test fitur Chest di gamePanel, menambahkan mouseListener pada button (di class Database).
+
+##8 April 2019
+Andrew :
+- Assets : Assets Dice, Property
+- Code : Fitur random dice, scoreboard, window beli city, window create player, fitur kartu, dan perbaikan code.
+
