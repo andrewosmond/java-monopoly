@@ -11,6 +11,7 @@ public class GoToStartCard extends Card{
 	}
 	
 	public void effect(GamePanel gamePanel, Player user) {
+		user.setCurrTile(gamePanel.getStartTile());
 		gamePanel.getStartTile().giveDoubleSalary(user);
 	}
 }

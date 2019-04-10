@@ -115,7 +115,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		dice = new Dice(this);
 		chanceCardTile = new ChanceCardTile(this);
 		chest = new Chest();
-		goToJailTile = new GoToJailTile();
+		goToJailTile = new GoToJailTile(this);
 		jailTile = new JailTile();
 		medicalBillTile = new MedicalBillTile();
 		startTile = new StartTile();

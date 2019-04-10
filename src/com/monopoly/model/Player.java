@@ -6,6 +6,8 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import com.monopoly.card.Card;
+import com.monopoly.card.HauntedHouseCard;
+import com.monopoly.card.VIPCard;
 import com.monopoly.main.GamePanel;
 import com.monopoly.main.GamePanel.GAMESTATE;
 
@@ -130,6 +132,7 @@ public class Player {
 				if (city.getOwner() == null) {
 					gamePanel.getBuyCityWindow().view(city, this);
 				} else if (city.getOwner() == this) {
+					// Have 3 buildings & no landmark
 					if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()
 							&& !city.isLandmarkBought()) {
 						if (this.getMoney() >= city.getLandmarkPrice()) {
@@ -139,15 +142,59 @@ public class Player {
 								city.setLandmarkBought(true);
 								this.setMoney(this.getMoney() - city.getLandmarkPrice());
 							}
-							gamePanel.setGameState(GAMESTATE.TURNEND);
 						}
+						gamePanel.setGameState(GAMESTATE.TURNEND);
+					// Landmark not bought
 					} else if (!city.isLandmarkBought()){
 						gamePanel.getBuyCityWindow().view(city, this);
 					}
-				} else {
-					this.setMoney(this.getMoney() - city.getRentFee());
-					city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
-					gamePanel.setGameState(GAMESTATE.TURNEND);
+					else {
+						gamePanel.setGameState(GAMESTATE.TURNEND);
+					}
+				} else if (city.getOwner() != this){
+					
+					if (this.getCard() == null) {
+						this.setMoney(this.getMoney() - city.getRentFee());
+						city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
+					} else if (this.getCard() instanceof VIPCard || this.getCard() instanceof HauntedHouseCard) {
+						gamePanel.setRentFee(city.getRentFee());
+						int input = JOptionPane.showConfirmDialog(null, "Do you want to use " + this.getCard().getName() + " ?",
+								"Confirmation", JOptionPane.YES_NO_OPTION);
+						if (input == 0) {
+							this.getCard().effect(gamePanel, this);
+						}
+						else {
+							this.setMoney(this.getMoney() - city.getRentFee());
+							city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
+						}
+					}
+					
+					if (this.getMoney() >= city.getTakeOverFee()) {
+						int input = JOptionPane.showConfirmDialog(null, "Do you want to take over " + city.getName() + " ?",
+								"Confirmation", JOptionPane.YES_NO_OPTION);
+						if (input == 0) {
+							city.getOwner().removeProperty(city);
+							city.setOwner(this);
+							this.setMoney(this.getMoney() - city.getLandmarkPrice());
+					
+							if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()
+									&& !city.isLandmarkBought()) {
+								if (this.getMoney() >= city.getLandmarkPrice()) {
+									int input2 = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + city.getName() + " to Landmark?",
+											"Confirmation", JOptionPane.YES_NO_OPTION);
+									if (input2 == 0) {
+										city.setLandmarkBought(true);
+										this.setMoney(this.getMoney() - city.getLandmarkPrice());
+									}
+									gamePanel.setGameState(GAMESTATE.TURNEND);
+								}
+							} else if (!city.isLandmarkBought()){
+								gamePanel.getBuyCityWindow().view(city, this);
+							}
+						}
+					} else {
+						gamePanel.setGameState(GAMESTATE.TURNEND);
+					}
 				}
 			} else if (currTile instanceof Island) {
 				Island island = (Island) currTile;
@@ -159,7 +206,21 @@ public class Player {
 							island.buy(this);
 					}
 				} else if (island.getOwner() != this) {
-					this.setMoney(this.getMoney() - island.getRentFee());
+					if (this.getCard() == null) {
+						this.setMoney(this.getMoney() - island.getRentFee());
+						island.getOwner().setMoney(island.getOwner().getMoney() + island.getRentFee());
+					} else if (this.getCard() instanceof VIPCard || this.getCard() instanceof HauntedHouseCard) {
+						gamePanel.setRentFee(island.getRentFee());
+						int input = JOptionPane.showConfirmDialog(null, "Do you want to use " + this.getCard().getName() + " ?",
+								"Confirmation", JOptionPane.YES_NO_OPTION);
+						if (input == 0) {
+							this.getCard().effect(gamePanel, this);
+						}
+						else {
+							this.setMoney(this.getMoney() - island.getRentFee());
+							island.getOwner().setMoney(island.getOwner().getMoney() + island.getRentFee());
+						}
+					}
 				}
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			} else if (currTile instanceof StartTile) {
@@ -174,7 +235,7 @@ public class Player {
 			} else if (currTile instanceof GoToJailTile) {
 				GoToJailTile goToJailTile = (GoToJailTile) currTile;
 				goToJailTile.send(this);
-				gamePanel.setGameState(GAMESTATE.TURNEND);
+				gamePanel.nextTurn();
 			} else if (currTile instanceof MedicalBillTile) {
 				MedicalBillTile medicalBillTile = (MedicalBillTile) currTile;
 				medicalBillTile.billFee(this, gamePanel.getChest());

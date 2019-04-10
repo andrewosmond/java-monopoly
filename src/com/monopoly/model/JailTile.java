@@ -8,6 +8,7 @@ public class JailTile extends Tiles {
 	
 	public void jailPlayer(Player p) {
 		p.setJailDuration(3);
+		p.setCurrTile(this);
 	}
 	
 	public void decrementDuration(Player p) {
