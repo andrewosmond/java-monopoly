@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import com.monopoly.main.GamePanel;
+import com.monopoly.main.GamePanel.GAMESTATE;
 
 public class Dice implements Runnable{
 	private GamePanel gamePanel = null;
@@ -49,13 +50,13 @@ public class Dice implements Runnable{
 		g.setFont(new Font("Calibri", Font.BOLD, 20));
 		g.drawString("Dice", 1126, 24);
 		
-		int w = gamePanel.getDice().getIconWidth() / 6;
-		int h = gamePanel.getDice().getIconHeight();
+		int w = gamePanel.getDiceImage().getIconWidth() / 6;
+		int h = gamePanel.getDiceImage().getIconHeight();
 		
-		g.drawImage(gamePanel.getDice().getImage(), 1090, 35, 1090+w, 35+h, 
+		g.drawImage(gamePanel.getDiceImage().getImage(), 1090, 35, 1090+w, 35+h, 
 				(firstValue-1)*w, 0, (firstValue-1)*w + w, h, null);
 		
-		g.drawImage(gamePanel.getDice().getImage(), 1150, 35, 1150+w, 35+h, 
+		g.drawImage(gamePanel.getDiceImage().getImage(), 1150, 35, 1150+w, 35+h, 
 				(secondValue-1)*w, 0, (secondValue-1)*w + w, h, null);
 	}
 	
@@ -72,25 +73,22 @@ public class Dice implements Runnable{
 	}
 
 	public void run() {
-		long lastTime = System.nanoTime();
-		final double amountOfTicks = 30.0;
-		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
 		long timer = System.currentTimeMillis();
 		
-		int i = 0;
-		
 		while(running) {
-			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
-			lastTime = now;
-			if(delta >= 1) {
-				roll();
-				delta--;
-			}
-			
+			roll();
 			if (System.currentTimeMillis() - timer > 1500) {
 				end();
+				if (gamePanel.getGameState() == GAMESTATE.ROLLING) {
+					gamePanel.setDiceRolled(getSum());
+					gamePanel.setGameState(GAMESTATE.MOVE);
+				}
+			}
+			
+			try {
+				Thread.sleep(1000/30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

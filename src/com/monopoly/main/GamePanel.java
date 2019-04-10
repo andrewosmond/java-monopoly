@@ -18,11 +18,11 @@ import javax.swing.JPanel;
 
 import com.monopoly.card.Card;
 import com.monopoly.card.CharityCard;
-import com.monopoly.card.DiscountCard;
-import com.monopoly.card.EarthquakeCard;
-import com.monopoly.card.EscapeCard;
+import com.monopoly.card.HauntedHouseCard;
+import com.monopoly.card.ExplosionCard;
+import com.monopoly.card.RedemptionCard;
 import com.monopoly.card.GoToJailCard;
-import com.monopoly.card.GoToMedicalBillCard;
+import com.monopoly.card.GoToHospitalCard;
 import com.monopoly.card.GoToStartCard;
 import com.monopoly.card.VIPCard;
 import com.monopoly.model.Board;
@@ -41,7 +41,9 @@ import com.monopoly.model.Scoreboard;
 import com.monopoly.model.StartTile;
 import com.monopoly.utility.TilesButton;
 import com.monopoly.window.BuyCityWindow;
+import com.monopoly.window.CardWindow;
 import com.monopoly.window.CreatePlayerWindow;
+import com.monopoly.window.JailEscapeWindow;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable {
@@ -52,15 +54,20 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	};
 	
 	public static enum GAMESTATE {
-		ROLL, MOVE, TRANSACTION, EVENT;
+		TURNSTART, INJAIL, ROLL, ROLLING, MOVE, MOVING, TURNEND
 	};
 
 	private static STATE currState = STATE.TRANSITION;
-	private static GAMESTATE gameState;
+	private static GAMESTATE gameState = null;
 
 	// game loops
 	private boolean running = false;
 	private Thread thread;
+	private Player currPlayer = null;
+	private int turn = 0;
+	private int doubleCounter = 0;
+	private int diceRolled = 1;
+	private long rentFee;
 
 	// assets
 	private ImageIcon imgDice = new ImageIcon("assets/dice.png");
@@ -88,16 +95,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private MedicalBillTile medicalBillTile;
 	private StartTile startTile;
 	private Scoreboard scoreboard;
-	private CreatePlayerWindow createPlayerWindow;
+	
 	private BuyCityWindow buyCityWindow;
-
-	private long rentFee;
-
-	// View buttons : comment setLayout & uncomment btnPaint
+	private CardWindow cardWindow;
+	private CreatePlayerWindow createPlayerWindow;
+	private JailEscapeWindow jailEscapeWindow;
+	
 	public GamePanel() {
 		setLayout(null);
 		setFocusable(true);
-		requestFocus();
 
 		characterList = new Vector<Character>();
 		playerList = new Vector<Player>();
@@ -107,7 +113,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		initCard();
 		
 		dice = new Dice(this);
-		chanceCardTile = new ChanceCardTile();
+		chanceCardTile = new ChanceCardTile(this);
 		chest = new Chest();
 		goToJailTile = new GoToJailTile();
 		jailTile = new JailTile();
@@ -117,8 +123,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		scoreboard = new Scoreboard(this);
 		tilesButton = new TilesButton(this);
 		setTilesButton(false);
-		createPlayerWindow = new CreatePlayerWindow(this);
+		
 		buyCityWindow = new BuyCityWindow(this);
+		cardWindow = CardWindow.getInstance();
+		createPlayerWindow = new CreatePlayerWindow(this);
+		jailEscapeWindow = new JailEscapeWindow(this);
+		
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -126,20 +136,40 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		start();
 	}
 	
-	public ImageIcon getDice() {
+	public ImageIcon getDiceImage() {
 		return imgDice;
 	}
 
-	public ImageIcon getMap() {
+	public ImageIcon getMapImage() {
 		return imgMap;
 	}
 
-	public ImageIcon getProperty() {
+	public ImageIcon getPropertyImage() {
 		return imgProperty;
+	}
+	
+	public STATE getCurrState() {
+		return currState;
 	}
 
 	public void setCurrState(STATE currState) {
 		GamePanel.currState = currState;
+	}
+	
+	public GAMESTATE getGameState() {
+		return gameState;
+	}
+	
+	public void setGameState(GAMESTATE gameState) {
+		GamePanel.gameState = gameState;
+	}
+	
+	public int getDiceRolled() {
+		return diceRolled;
+	}
+	
+	public void setDiceRolled(int diceRolled) {
+		this.diceRolled = diceRolled;
 	}
 
 	public Vector<Player> getPlayerList() {
@@ -196,14 +226,22 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	}
 	
 	public void initCard() {
-		cardList.add(new CharityCard());
-		cardList.add(new DiscountCard());
-		cardList.add(new EarthquakeCard());
-		cardList.add(new EscapeCard());
-		cardList.add(new GoToJailCard());
-		cardList.add(new GoToMedicalBillCard());
-		cardList.add(new GoToStartCard());
-		cardList.add(new VIPCard());
+		cardList.add(new CharityCard(0));
+		cardList.add(new HauntedHouseCard(1));
+		cardList.add(new ExplosionCard(2));
+		cardList.add(new RedemptionCard(3));
+		cardList.add(new GoToJailCard(4));
+		cardList.add(new GoToHospitalCard(5));
+		cardList.add(new GoToStartCard(6));
+		cardList.add(new VIPCard(7));
+	}
+	
+	public Vector<Card> getCardList(){
+		return cardList;
+	}
+	
+	public Dice getDice() {
+		return dice;
 	}
 
 	public Board getBoard() {
@@ -252,6 +290,18 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				this.add(btn);
 			}
 	}
+	
+	public BuyCityWindow getBuyCityWindow() {
+		return buyCityWindow;
+	}
+	
+	public CardWindow getCardWindow() {
+		return cardWindow;
+	}
+	
+	public JailEscapeWindow getJailEscapeWindow() {
+		return jailEscapeWindow;
+	}
 
 	private synchronized void start() {
 		if (running) return;
@@ -270,40 +320,78 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		}
 		System.exit(1);
 	}
+	
+	public Player getCurrPlayer() {
+		return currPlayer;
+	}
+	
+	public void nextTurn() {
+		turn++;
+		turn = turn % playerList.size();
+		doubleCounter = 0;
+		gameState = GAMESTATE.TURNSTART;
+	}
 
 	public void run() {
-		long lastTime = System.nanoTime();
-		final double amountOfTicks = 60.0;
-		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
-		long timer = System.currentTimeMillis();
-		int n = 1;
 		
 		while (running) {
-			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
-			lastTime = now;
-			if(delta >= 1) {
-				repaint();
-				delta--;
-			}
-			
+			repaint();
 			
 			if (currState == STATE.GAME) {
-				if (n == 1) {
-					n--;
-					int size = propertyList.size()-6;
-					buyCityWindow.display((City)propertyList.get(size), playerList.get(0));
+				if (gameState == GAMESTATE.TURNSTART) {
+					chest.increaseMoney();
+					currPlayer = playerList.get(turn);
+					jailTile.decrementDuration(currPlayer);
+					if (currPlayer.isInJail()) {
+						gameState = GAMESTATE.INJAIL;
+						jailEscapeWindow.view(currPlayer);
+					} else {
+						gameState = GAMESTATE.ROLL;
+					}
 				}
+	
+				if (gameState == GAMESTATE.MOVE) {
+					//Call character render
+					gameState = GAMESTATE.MOVING;
+				}
+				
+				if (gameState == GAMESTATE.TURNEND) {
+					if (doubleCounter == 3) {
+						jailTile.jailPlayer(playerList.get(turn));
+						nextTurn();
+					} else if (dice.isDouble()) {
+						gameState = GAMESTATE.ROLL;
+						doubleCounter++;
+					} else {
+						nextTurn();
+					}
+				}		
 			}
 	
 			try {
-				Thread.sleep(1000 / 60);
+				Thread.sleep(1000/60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		
 		end();
+	}
+	
+	public void displayCurrentTurn(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 20));
+		g.drawString("Current Turn", 1087, 120);
+		int x = playerList.get(turn).getName().length();
+		g.drawString(playerList.get(turn).getName(), 1016 + (258-12*x)/2, 148);
+	}
+	
+	public void displayRollButton(Graphics g) {
+		g.setColor(new Color(113, 62, 90));
+		g.fillRect(1095, 500, 100, 40);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Calibri", Font.BOLD, 25));
+		g.drawString("Roll", 1125, 528);
 	}
 
 	public void paint(Graphics g) {
@@ -323,41 +411,25 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		if (currState == STATE.MENU || currState == STATE.CREATEPLAYER) {
 			g.drawImage(imgTitle.getImage(), 0, 0, null);
 		} else if (currState == STATE.GAME) {
-			// For Debug Only
-			int size = propertyList.size()-6;
-			propertyList.get(size).setOwner(playerList.get(0));
-			playerList.get(0).addProperty(propertyList.get(size));
-			((City) propertyList.get(size)).setLandBought(true);
-			((City) propertyList.get(size)).setLandmarkBought(true);
-			
-			propertyList.get(size-1).setOwner(playerList.get(0));
-			playerList.get(0).addProperty(propertyList.get(size-1));
-			((City) propertyList.get(size-1)).setLandBought(true);
-			((City) propertyList.get(size-1)).setLandmarkBought(true);
-			
-			
-			propertyList.get(1).setOwner(playerList.get(1));
-			playerList.get(1).addProperty(propertyList.get(1));
-			((City) propertyList.get(1)).setLandmarkBought(true);
-			propertyList.get(getPropertyIndex("Papua")).setOwner(playerList.get(0));
-			playerList.get(0).addProperty(propertyList.get(getPropertyIndex("Papua")));
-			
-			///////////////////////////////////////////////////////////
-
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawString("Cursor Coordinate : ", 1080, 575);
 
 			g.drawString("X : " + coorX + " Y: " + coorY, 1080, 605);
 			
-
-			// Render
+			displayCurrentTurn(g);
 			board.render(g);
 			chest.render(g);
 			dice.render(g);
 			scoreboard.render(g);
-			displayRollButton(g);
+		
+			if (gameState == GAMESTATE.ROLL) {
+				displayRollButton(g);
+			}
 			
-			///////////////////////////////////////////////////////////
+			if (gameState == GAMESTATE.MOVING) {
+				currPlayer.move(g);
+			}
+			
 		} else if (currState == STATE.TRANSITION) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawImage(imgTransition.getImage(), 0, 0, null);
@@ -366,17 +438,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		}
 
 		g.dispose();
-//		for (JButton btn : Database.getButtonsList()) {
-//			btn.paint(g);
-//		}
-	}
-	
-	public void displayRollButton(Graphics g) {
-		g.setColor(new Color(113, 62, 90));
-		g.fillRect(1095, 500, 100, 40);
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Calibri", Font.BOLD, 25));
-		g.drawString("Roll", 1125, 528);
 	}
 
 	public void mouseDragged(MouseEvent e) {}
@@ -411,14 +472,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				System.exit(1);
 			}
 		} else if (currState == STATE.GAME) {
-		
-			//Dice
-			if (coorX >= 1095 && coorX <= 1195 && coorY >= 500 && coorY <= 540) {
-				dice.start();
+			if (gameState == GAMESTATE.ROLL) {
+				if (coorX >= 1095 && coorX <= 1195 && coorY >= 500 && coorY <= 540) {
+					gameState = GAMESTATE.ROLLING;
+					dice.start();
+				}
 			}
-//			if (gameState == GAMESTATE.ROLL) {
-//				dice.roll();
-//			}
 		}
 	}
 

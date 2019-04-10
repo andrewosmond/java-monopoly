@@ -12,7 +12,7 @@ public class Board{
 	public Board(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 		tilesList = new Vector<Tiles>();
-		tilesList.add(new StartTile());
+		tilesList.add(gamePanel.getStartTile());
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Beijing")));
 		tilesList.add(gamePanel.getChanceCardTile());
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Bangkok")));
@@ -24,7 +24,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Papua")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Tokyo")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Sydney")));
-		tilesList.add(gamePanel.getChanceCardTile());
+		tilesList.add(new ChanceCardTile(gamePanel));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Singapore")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Bali")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Sao Paulo")));
@@ -32,7 +32,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Prague")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Hawaii")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Berlin")));
-		tilesList.add(gamePanel.getChanceCardTile());
+		tilesList.add(new ChanceCardTile(gamePanel));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Moscow")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Geneva")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Rome")));
@@ -40,7 +40,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Bintan")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("London")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Paris")));
-		tilesList.add(gamePanel.getChanceCardTile());
+		tilesList.add(new ChanceCardTile(gamePanel));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("New York")));
 		tilesList.add(gamePanel.getMedicalBillTile());
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Jakarta")));
@@ -139,7 +139,7 @@ public class Board{
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(gamePanel.getMap().getImage(), 0, 0, null);
+		g.drawImage(gamePanel.getMapImage().getImage(), 0, 0, null);
 		
 		checkMultiplier();
 		

@@ -7,7 +7,6 @@ public class Game{
 	
 	public Game() {
 		frame = new JFrame("Monopoly");
-		frame.pack();
 	    frame.setSize(1280, 720);
 
 	    frame.add(new GamePanel());

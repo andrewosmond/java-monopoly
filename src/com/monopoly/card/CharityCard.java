@@ -5,8 +5,9 @@ import com.monopoly.model.Player;
 
 public class CharityCard extends Card {
 
-	public CharityCard() {
+	public CharityCard(int col) {
 		this.name = "Charity";
+		this.col = col;
 	}
 
 	public void effect(GamePanel gamePanel, Player user) {

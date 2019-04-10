@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.monopoly.main.GamePanel;
+import com.monopoly.main.GamePanel.GAMESTATE;
 import com.monopoly.model.City;
 import com.monopoly.model.Player;
 
@@ -40,7 +41,7 @@ public class BuyCityWindow implements WindowListener{
 		return frame;
 	}
 	
-	public void display(City city, Player player) {
+	public void view(City city, Player player) {
 		buyCityPanel.init(city, player);
 		frame.setVisible(true);
 	}
@@ -53,7 +54,9 @@ public class BuyCityWindow implements WindowListener{
 	
 	public void windowClosed(WindowEvent e) {}
 	
-	public void windowClosing(WindowEvent e) {}
+	public void windowClosing(WindowEvent e) {
+		gamePanel.setGameState(GAMESTATE.TURNEND);
+	}
 
 	public void windowDeactivated(WindowEvent e) {}
 	

@@ -20,6 +20,7 @@ public class TilesButton {
 	public TilesButton(GamePanel gamePanel) {
 		Polygon polygon;
 		JButton btn;
+		InfoWindow infoWindow = InfoWindow.getInstance();
 
 		// Start Button
 		polygon = new Polygon();
@@ -30,8 +31,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Start");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.START);
-				InfoWindow.view();
+				infoWindow.setState(STATE.START);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -54,8 +55,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Chance");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.CHANCECARD);
-				InfoWindow.view();
+				infoWindow.setState(STATE.CHANCECARD);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -114,8 +115,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Jail");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.JAIL);
-				InfoWindow.view();
+				infoWindow.setState(STATE.JAIL);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -156,8 +157,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Chance");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.CHANCECARD);
-				InfoWindow.view();
+				infoWindow.setState(STATE.CHANCECARD);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -198,8 +199,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Chest");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.CHEST);
-				InfoWindow.view();
+				infoWindow.setState(STATE.CHEST);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -240,8 +241,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Chance");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.CHANCECARD);
-				InfoWindow.view();
+				infoWindow.setState(STATE.CHANCECARD);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -282,8 +283,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Go to Jail");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.GOTOJAIL);
-				InfoWindow.view();
+				infoWindow.setState(STATE.GOTOJAIL);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -324,8 +325,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Chance");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.CHANCECARD);
-				InfoWindow.view();
+				infoWindow.setState(STATE.CHANCECARD);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -348,8 +349,8 @@ public class TilesButton {
 		btn = new PolygonButton(polygon, "Medical Bill");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfoWindow.setState(STATE.MEDICALBILL);
-				InfoWindow.view();
+				infoWindow.setState(STATE.MEDICALBILL);
+				infoWindow.view();
 			}
 		});
 		buttonList.add(btn);
@@ -368,7 +369,7 @@ public class TilesButton {
 				 public void actionPerformed(ActionEvent e) {
 					 int index = gamePanel.getPropertyIndex(jButton.getName());
 					 if (index != -1) {
-						 InfoWindow.view(gamePanel.getPropertyList().get(index));
+						 infoWindow.view(gamePanel.getPropertyList().get(index));
 					 }
 				 }
 			 });

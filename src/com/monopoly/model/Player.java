@@ -1,9 +1,13 @@
 package com.monopoly.model;
 
+import java.awt.Graphics;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 import com.monopoly.card.Card;
 import com.monopoly.main.GamePanel;
+import com.monopoly.main.GamePanel.GAMESTATE;
 
 public class Player {
 	private String name;
@@ -12,11 +16,11 @@ public class Player {
 	private Vector<Property> propertyList;
 	private Tiles currTile;
 	private Card card;
-	
+	private GamePanel gamePanel = null;
+
 	private int islandCount = 0;
 	private int jailDuration = 0;
-	private boolean inJail = false;
-	
+
 	public Player(String name, Character character, GamePanel gamePanel) {
 		this.name = name;
 		this.character = character;
@@ -24,16 +28,16 @@ public class Player {
 		this.propertyList = new Vector<Property>();
 		this.currTile = gamePanel.getStartTile();
 		this.card = null;
+		this.gamePanel = gamePanel;
 		this.islandCount = 0;
 		this.jailDuration = 0;
-		this.inJail = false;
 	}
-	
+
 	public void addProperty(Property p) {
 		if (!propertyList.contains(p))
 			propertyList.add(p);
 	}
-	
+
 	public void removeProperty(Property p) {
 		propertyList.remove(p);
 	}
@@ -69,7 +73,7 @@ public class Player {
 	public void setCurrTile(Tiles currTile) {
 		this.currTile = currTile;
 	}
-	
+
 	public Card getCard() {
 		return card;
 	}
@@ -95,17 +99,13 @@ public class Player {
 	}
 
 	public boolean isInJail() {
-		return inJail;
+		return jailDuration > 0;
 	}
 
-	public void setInJail(boolean inJail) {
-		this.inJail = inJail;
-	}
-	
-	public Vector<Property> getPropertyList(){
+	public Vector<Property> getPropertyList() {
 		return propertyList;
 	}
-	
+
 	public long getTotalAssets() {
 		long result = money;
 		for (Property property : propertyList) {
@@ -113,8 +113,88 @@ public class Player {
 		}
 		return result;
 	}
-	
+
 	public boolean isBankrupt() {
 		return money < 0;
+	}
+
+	public void move(Graphics g) {
+		if (gamePanel.getDiceRolled() == 0) return;
+		
+		gamePanel.setDiceRolled(gamePanel.getDiceRolled() - 1);
+		currTile = gamePanel.getBoard().getNextTiles(currTile);
+		
+		if (gamePanel.getDiceRolled() == 0) {
+			if (currTile instanceof City) {
+				City city = (City) currTile;
+				if (city.getOwner() == null) {
+					gamePanel.getBuyCityWindow().view(city, this);
+				} else if (city.getOwner() == this) {
+					if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()
+							&& !city.isLandmarkBought()) {
+						if (this.getMoney() >= city.getLandmarkPrice()) {
+							int input = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + city.getName() + " to Landmark?",
+									"Confirmation", JOptionPane.YES_NO_OPTION);
+							if (input == 0) {
+								city.setLandmarkBought(true);
+								this.setMoney(this.getMoney() - city.getLandmarkPrice());
+							}
+							gamePanel.setGameState(GAMESTATE.TURNEND);
+						}
+					} else if (!city.isLandmarkBought()){
+						gamePanel.getBuyCityWindow().view(city, this);
+					}
+				} else {
+					this.setMoney(this.getMoney() - city.getRentFee());
+					city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
+					gamePanel.setGameState(GAMESTATE.TURNEND);
+				}
+			} else if (currTile instanceof Island) {
+				Island island = (Island) currTile;
+				if (island.getOwner() == null) {
+					if (this.getMoney() >= island.getPrice()) {
+						int input = JOptionPane.showConfirmDialog(null, "Do you want to buy " + island.getName() + " ?",
+								"Confirmation", JOptionPane.YES_NO_OPTION);
+						if (input == 0)
+							island.buy(this);
+					}
+				} else if (island.getOwner() != this) {
+					this.setMoney(this.getMoney() - island.getRentFee());
+				}
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			} else if (currTile instanceof StartTile) {
+				StartTile startTile = (StartTile) currTile;
+				startTile.giveDoubleSalary(this);
+				System.out.println(this.getName() + " received double salary!");
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			} else if (currTile instanceof Chest) {
+				Chest chest = (Chest) currTile;
+				chest.giveMoney(this);
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			} else if (currTile instanceof GoToJailTile) {
+				GoToJailTile goToJailTile = (GoToJailTile) currTile;
+				goToJailTile.send(this);
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			} else if (currTile instanceof MedicalBillTile) {
+				MedicalBillTile medicalBillTile = (MedicalBillTile) currTile;
+				medicalBillTile.billFee(this, gamePanel.getChest());
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			} else if (currTile instanceof ChanceCardTile) {
+				ChanceCardTile chanceCardTile = (ChanceCardTile) currTile;
+				chanceCardTile.randomCard(this);
+			} else if (currTile instanceof JailTile) {
+				gamePanel.setGameState(GAMESTATE.TURNEND);
+			}
+
+			System.out.println(getName() + " moved to " + currTile.getName());
+
+		} else {
+			if (currTile instanceof StartTile) {
+				StartTile startTile = (StartTile) currTile;
+				startTile.giveSalary(this);
+				System.out.println(this.getName() + " received normal salary!");
+			}
+		}
+
 	}
 }

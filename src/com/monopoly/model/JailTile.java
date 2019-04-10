@@ -6,15 +6,21 @@ public class JailTile extends Tiles {
 		this.name = "Jail";
 	}
 	
+	public void jailPlayer(Player p) {
+		p.setJailDuration(3);
+	}
+	
 	public void decrementDuration(Player p) {
 		if (p.getJailDuration() > 0)
 			p.setJailDuration(p.getJailDuration() - 1);
 	}
 	
+	public void payFee(Player p) {
+		p.setMoney(p.getMoney() - 200000);
+	}
+	
 	public void releasePlayer(Player p) {
-		if (p.getJailDuration() == 0) {
-			p.setInJail(false);
-		}
+		p.setJailDuration(0);
 	}
 	
 }

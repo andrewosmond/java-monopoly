@@ -3,14 +3,15 @@ package com.monopoly.card;
 import com.monopoly.main.GamePanel;
 import com.monopoly.model.Player;
 
-public class GoToStartCard extends Card{
+public class RedemptionCard extends IndirectCard{
 	
-	public GoToStartCard(int col) {
-		this.name = "Go To Start";
+	public RedemptionCard(int col) {
+		this.name = "Redemption";
 		this.col = col;
 	}
-	
+
 	public void effect(GamePanel gamePanel, Player user) {
-		gamePanel.getStartTile().giveDoubleSalary(user);
+		user.setJailDuration(0);
+		removeCard(user);
 	}
 }

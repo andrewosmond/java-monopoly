@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.monopoly.main.GamePanel;
+import com.monopoly.main.GamePanel.GAMESTATE;
 import com.monopoly.model.Player;
 
 @SuppressWarnings("serial")
@@ -44,6 +45,7 @@ public class CreatePlayerButtonPanel extends JPanel implements ActionListener {
 				
 				JOptionPane.showMessageDialog(this, "Player successfully created!");
 				gamePanel.setCurrState(GamePanel.STATE.GAME);
+				gamePanel.setGameState(GAMESTATE.TURNSTART);
 				gamePanel.setTilesButton(true);
 				playerWindow.getFrame().setVisible(false);
 			}

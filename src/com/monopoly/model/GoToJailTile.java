@@ -7,7 +7,6 @@ public class GoToJailTile extends Tiles{
 	}
 	
 	public void send(Player p) {
-		p.setInJail(true);
 		p.setJailDuration(3);
 	}
 }

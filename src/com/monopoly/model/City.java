@@ -136,8 +136,8 @@ public class City extends Property {
 	}
 
 	public void render(Graphics g, GamePanel gamePanel) {
-		int x = gamePanel.getProperty().getIconWidth() / 4;
-		int y = gamePanel.getProperty().getIconHeight() / 12;
+		int x = gamePanel.getPropertyImage().getIconWidth() / 4;
+		int y = gamePanel.getPropertyImage().getIconHeight() / 12;
 
 		if (owner == null) return;
 
@@ -163,23 +163,23 @@ public class City extends Property {
 		}
 
 		if (landmarkBought) {
-			g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+			g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 					y * landmarkIdx, x * playerColor + x, y * landmarkIdx + y, null);
 		} else if (hotelBought || buildingBought || houseBought) {
 			if (hotelBought) {
-				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+				g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 						y * hotelIdx, x * playerColor + x, y * hotelIdx + y, null);
 			}
 			if (buildingBought) {
-				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+				g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 						y * buildingIdx, x * playerColor + x, y * buildingIdx + y, null);
 			}
 			if (houseBought) {
-				g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+				g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 						y * houseIdx, x * playerColor + x, y * houseIdx + y, null);
 			}
 		} else if (landBought) {
-			g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+			g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 					y * landIdx, x * playerColor + x, y * landIdx + y, null);
 		}
 	}

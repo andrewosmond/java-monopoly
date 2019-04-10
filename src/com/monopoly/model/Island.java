@@ -65,8 +65,8 @@ public class Island extends Property{
 	}
 
 	public void render(Graphics g, GamePanel gamePanel) {
-		int x = gamePanel.getProperty().getIconWidth() / 4;
-		int y = gamePanel.getProperty().getIconHeight() / 12;
+		int x = gamePanel.getPropertyImage().getIconWidth() / 4;
+		int y = gamePanel.getPropertyImage().getIconHeight() / 12;
 	
 		if (owner == null) return;
 		
@@ -79,7 +79,7 @@ public class Island extends Property{
 			islandIdx = 5;
 		}
 		
-		g.drawImage(gamePanel.getProperty().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
+		g.drawImage(gamePanel.getPropertyImage().getImage(), coorX, coorY, coorX + x, coorY + y, x * playerColor,
 				y * islandIdx, x * playerColor + x, y * islandIdx + y, null);
 	}
 }

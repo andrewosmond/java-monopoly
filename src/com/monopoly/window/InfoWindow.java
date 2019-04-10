@@ -14,12 +14,13 @@ import com.monopoly.utility.MoneyFormatter;
 
 @SuppressWarnings("serial")
 public class InfoWindow extends JFrame {
-	private static InfoWindow instance = new InfoWindow();
 	public static enum STATE{
 		CITY, ISLAND, CHANCECARD, CHEST, GOTOJAIL, JAIL, MEDICALBILL, START
 	};
-	private static STATE currState = null;
-	private static Property property = null;
+	
+	private static InfoWindow instance = new InfoWindow();
+	private STATE currState = null;
+	private Property property = null;
 	
 	private ImageIcon cityWindow = new ImageIcon("assets/cityInfoWindow.png");
 	private ImageIcon islandWindow = new ImageIcon("assets/islandInfoWindow.png");
@@ -33,57 +34,54 @@ public class InfoWindow extends JFrame {
 	
 	private InfoWindow() {
 		setSize(500, 400);
-		setLocationRelativeTo(null);	
+		setLocationRelativeTo(null);
 		setResizable(false);
-		setVisible(true);
 	}
 	
 	public static InfoWindow getInstance() {
 		return instance;
 	}
 
-	public static void setState(STATE currState) {
-		InfoWindow.currState = currState;
+	public void setState(STATE currState) {
+		this.currState = currState;
 	}
 	
-	public static void view() {
+	public void view() {
 		switch(currState) {
 		case CHANCECARD:
-			instance.setTitle("Chance Card Information");
+			setTitle("Chance Card Information");
 			break;
 		case CHEST:
-			instance.setTitle("Chest Information");
+			setTitle("Chest Information");
 			break;
 		case GOTOJAIL:
-			instance.setTitle("Go to Jail Information");
+			setTitle("Go to Jail Information");
 			break;
 		case JAIL:
-			instance.setTitle("Jail Information");
+			setTitle("Jail Information");
 			break;
 		case MEDICALBILL:
-			instance.setTitle("Medical Bill Information");
+			setTitle("Medical Bill Information");
 			break;
 		case START:
-			instance.setTitle("Start Information");
+			setTitle("Start Information");
 			break;
 		}
-		instance.repaint();
-		instance.setVisible(true);
+		repaint();
+		setVisible(true);
 	}
 
-	public static void view(Property property) {
-		InfoWindow.property = property;
+	public void view(Property property) {
+		this.property = property;
 		if (property instanceof City) {
 			currState = STATE.CITY;
-			instance.setTitle("City Information");
-			instance.repaint();
-			instance.setVisible(true);
+			setTitle("City Information");
 		} else if (property instanceof Island) {
 			currState = STATE.ISLAND;
-			instance.setTitle("Island Information");
-			instance.repaint();
-			instance.setVisible(true);
+			setTitle("Island Information");
 		}
+		repaint();
+		setVisible(true);
 	}
 	
 	public void paint(Graphics g) {
@@ -111,7 +109,7 @@ public class InfoWindow extends JFrame {
 					x*property.getTilesCol(), y*property.getTilesRow(), 
 					x*property.getTilesCol() + x, y*property.getTilesRow() + y, null);
 			
-			City city = (City)InfoWindow.property;
+			City city = (City)property;
 			g.setFont(new Font("Calibri", Font.PLAIN, 13));
 			g.drawString(MoneyFormatter.getFormat(city.getLandPrice()), 385, 154);
 			g.drawString(MoneyFormatter.getFormat(city.getHousePrice()), 385, 176);
@@ -143,7 +141,7 @@ public class InfoWindow extends JFrame {
 					x*property.getTilesCol(), y*property.getTilesRow(), 
 					x*property.getTilesCol() + x, y*property.getTilesRow() + y, null);
 			
-			Island island = (Island)InfoWindow.property;
+			Island island = (Island)property;
 			g.setFont(new Font("Calibri", Font.PLAIN, 13));
 			g.drawString(MoneyFormatter.getFormat(island.getPrice()), 375, 135);
 			g.drawString(MoneyFormatter.getFormat(island.getRent() * 1), 385, 261);
@@ -177,5 +175,6 @@ public class InfoWindow extends JFrame {
 			break;
 		}
 		
+		g.dispose();
 	}
 }

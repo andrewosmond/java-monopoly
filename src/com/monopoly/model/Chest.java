@@ -38,10 +38,7 @@ public class Chest extends Tiles{
 	public void render(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.PLAIN, 20));
-		if (money == 0) {
-			g.drawString(MoneyFormatter.getFormat(money), 506, 258);
-		} else {
-			g.drawString(MoneyFormatter.getFormat(money), 490, 258);
-		}
+		int len = MoneyFormatter.getFormat(money).length();
+		g.drawString(MoneyFormatter.getFormat(money), (1016-10*len)/2, 258);
 	}
 }
