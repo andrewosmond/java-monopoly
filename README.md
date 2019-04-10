@@ -47,3 +47,6 @@ Andrew :
 - Assets : Assets Dice, Property
 - Code : Fitur random dice, scoreboard, window beli city, window create player, fitur kartu, dan perbaikan code.
 
+## 10 April 2019
+Andrew :
+- Code : Logic looping game (turn) sudah dapat berfungsi dan perbaikan code.
