@@ -25,6 +25,7 @@ import com.monopoly.card.GoToJailCard;
 import com.monopoly.card.GoToHospitalCard;
 import com.monopoly.card.GoToStartCard;
 import com.monopoly.card.VIPCard;
+import com.monopoly.main.GamePanel.STATE;
 import com.monopoly.model.Board;
 import com.monopoly.model.ChanceCardTile;
 import com.monopoly.model.Character;
@@ -44,20 +45,22 @@ import com.monopoly.window.BuyCityWindow;
 import com.monopoly.window.CardWindow;
 import com.monopoly.window.CreatePlayerWindow;
 import com.monopoly.window.JailEscapeWindow;
+import com.monopoly.window.LogoAnimation;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable {
 
 	// game status enumeration
 	public static enum STATE {
-		TRANSITION, CREATEPLAYER, GAME, HELP, MENU
+		TRANSITION, CREATEPLAYER, GAME, HELP, MENU, LOGO
 	};
 	
 	public static enum GAMESTATE {
 		TURNSTART, INJAIL, ROLL, ROLLING, MOVE, MOVING, TURNEND
 	};
 
-	private static STATE currState = STATE.TRANSITION;
+	private static STATE currState = STATE.LOGO;
+	private static STATE prevState = null;
 	private static GAMESTATE gameState = null;
 
 	// game loops
@@ -81,6 +84,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private int coorY;
 
 	// objects
+	private LogoAnimation la;
+	
 	private Vector<Character> characterList;
 	private Vector<Player> playerList;
 	private Vector<Property> propertyList;
@@ -101,10 +106,14 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private CreatePlayerWindow createPlayerWindow;
 	private JailEscapeWindow jailEscapeWindow;
 	
+
+	
 	public GamePanel() {
 		setLayout(null);
 		setFocusable(true);
 
+		la = new LogoAnimation();
+		
 		characterList = new Vector<Character>();
 		playerList = new Vector<Player>();
 		propertyList = new Vector<Property>();
@@ -410,6 +419,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		
 		if (currState == STATE.MENU || currState == STATE.CREATEPLAYER) {
 			g.drawImage(imgTitle.getImage(), 0, 0, null);
+			prevState = currState;
 		} else if (currState == STATE.GAME) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawString("Cursor Coordinate : ", 1080, 575);
@@ -429,12 +439,22 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 			if (gameState == GAMESTATE.MOVING) {
 				currPlayer.move(g);
 			}
-			
+			prevState = currState;
 		} else if (currState == STATE.TRANSITION) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawImage(imgTransition.getImage(), 0, 0, null);
 			g.setFont(new Font("Helvetia", Font.BOLD, 50));
 			g.drawString("PRESS ENTER TO CONTINUE...", 250, 650);
+			prevState = currState;
+		} else if(currState == STATE.LOGO) {
+			if(prevState != STATE.LOGO) {
+				la.init();
+			}
+			prevState = currState;
+			if(la.render() == 1) {
+				currState = STATE.TRANSITION;
+			}
+			la.draw(g);
 		}
 
 		g.dispose();
