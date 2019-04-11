@@ -10,6 +10,7 @@ import com.monopoly.card.HauntedHouseCard;
 import com.monopoly.card.VIPCard;
 import com.monopoly.main.GamePanel;
 import com.monopoly.main.GamePanel.GAMESTATE;
+import com.monopoly.utility.MoneyFormatter;
 
 public class Player {
 	private String name;
@@ -132,9 +133,12 @@ public class Player {
 				if (city.getOwner() == null) {
 					gamePanel.getBuyCityWindow().view(city, this);
 				} else if (city.getOwner() == this) {
+					// Landmark bought
+					if (city.isLandmarkBought()) {
+						gamePanel.setGameState(GAMESTATE.TURNEND);
+					}
 					// Have 3 buildings & no landmark
-					if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()
-							&& !city.isLandmarkBought()) {
+					else if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()) {
 						if (this.getMoney() >= city.getLandmarkPrice()) {
 							int input = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + city.getName() + " to Landmark?",
 									"Confirmation", JOptionPane.YES_NO_OPTION);
@@ -144,41 +148,50 @@ public class Player {
 							}
 						}
 						gamePanel.setGameState(GAMESTATE.TURNEND);
-					// Landmark not bought
-					} else if (!city.isLandmarkBought()){
+					// Less than 3 buildings
+					} else {
 						gamePanel.getBuyCityWindow().view(city, this);
-					}
-					else {
-						gamePanel.setGameState(GAMESTATE.TURNEND);
 					}
 				} else if (city.getOwner() != this){
 					
+					//Have no card
 					if (this.getCard() == null) {
 						this.setMoney(this.getMoney() - city.getRentFee());
 						city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
+					//Have VIP card / Haunted House Card
 					} else if (this.getCard() instanceof VIPCard || this.getCard() instanceof HauntedHouseCard) {
-						gamePanel.setRentFee(city.getRentFee());
 						int input = JOptionPane.showConfirmDialog(null, "Do you want to use " + this.getCard().getName() + " ?",
 								"Confirmation", JOptionPane.YES_NO_OPTION);
+						gamePanel.setRentFee(city.getRentFee());
 						if (input == 0) {
+							//If answer = yes, apply the card effect to gamePanel rentFee
 							this.getCard().effect(gamePanel, this);
+							this.setMoney(this.getMoney() - gamePanel.getRentFee());
+							city.getOwner().setMoney(city.getOwner().getMoney() + gamePanel.getRentFee());
 						}
 						else {
+							//Apply rent fee as normal
 							this.setMoney(this.getMoney() - city.getRentFee());
 							city.getOwner().setMoney(city.getOwner().getMoney() + city.getRentFee());
 						}
 					}
 					
+					// If money is sufficient, the player may choose to take over the city
 					if (this.getMoney() >= city.getTakeOverFee()) {
 						int input = JOptionPane.showConfirmDialog(null, "Do you want to take over " + city.getName() + " ?",
 								"Confirmation", JOptionPane.YES_NO_OPTION);
 						if (input == 0) {
+							//Take over conditions
 							city.getOwner().removeProperty(city);
-							city.setOwner(this);
+							city.buy(this);
 							this.setMoney(this.getMoney() - city.getLandmarkPrice());
 					
-							if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()
-									&& !city.isLandmarkBought()) {
+							// Landmark bought
+							if (city.isLandmarkBought()) {
+								gamePanel.setGameState(GAMESTATE.TURNEND);
+							}
+							// Have 3 buildings & no landmark
+							else if (city.isLandBought() && city.isHouseBought() && city.isHotelBought()) {
 								if (this.getMoney() >= city.getLandmarkPrice()) {
 									int input2 = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + city.getName() + " to Landmark?",
 											"Confirmation", JOptionPane.YES_NO_OPTION);
@@ -186,36 +199,47 @@ public class Player {
 										city.setLandmarkBought(true);
 										this.setMoney(this.getMoney() - city.getLandmarkPrice());
 									}
-									gamePanel.setGameState(GAMESTATE.TURNEND);
 								}
-							} else if (!city.isLandmarkBought()){
+								gamePanel.setGameState(GAMESTATE.TURNEND);
+							// Less than 3 buildings
+							} else {
 								gamePanel.getBuyCityWindow().view(city, this);
 							}
 						}
+					// Money is not sufficient, can't take over the city
 					} else {
 						gamePanel.setGameState(GAMESTATE.TURNEND);
 					}
 				}
 			} else if (currTile instanceof Island) {
 				Island island = (Island) currTile;
+				// Island have no owner
 				if (island.getOwner() == null) {
+					// Have sufficient money
 					if (this.getMoney() >= island.getPrice()) {
 						int input = JOptionPane.showConfirmDialog(null, "Do you want to buy " + island.getName() + " ?",
 								"Confirmation", JOptionPane.YES_NO_OPTION);
 						if (input == 0)
 							island.buy(this);
 					}
-				} else if (island.getOwner() != this) {
+				}
+				// Island's owner is not this player
+				else if (island.getOwner() != this) {
+					// Have no card
 					if (this.getCard() == null) {
 						this.setMoney(this.getMoney() - island.getRentFee());
 						island.getOwner().setMoney(island.getOwner().getMoney() + island.getRentFee());
 					} else if (this.getCard() instanceof VIPCard || this.getCard() instanceof HauntedHouseCard) {
-						gamePanel.setRentFee(island.getRentFee());
 						int input = JOptionPane.showConfirmDialog(null, "Do you want to use " + this.getCard().getName() + " ?",
 								"Confirmation", JOptionPane.YES_NO_OPTION);
+						gamePanel.setRentFee(island.getRentFee());
+						// If answer = yes, apply the card effect to gamePanel rentFee
 						if (input == 0) {
 							this.getCard().effect(gamePanel, this);
+							this.setMoney(this.getMoney() - gamePanel.getRentFee());
+							island.getOwner().setMoney(island.getOwner().getMoney() + gamePanel.getRentFee());
 						}
+						// Apply the normal island rent fee
 						else {
 							this.setMoney(this.getMoney() - island.getRentFee());
 							island.getOwner().setMoney(island.getOwner().getMoney() + island.getRentFee());
@@ -224,23 +248,28 @@ public class Player {
 				}
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			} else if (currTile instanceof StartTile) {
+				// Double salary effect resolves directly
 				StartTile startTile = (StartTile) currTile;
 				startTile.giveDoubleSalary(this);
 				System.out.println(this.getName() + " received double salary!");
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			} else if (currTile instanceof Chest) {
+				// Player gets money from the chest
 				Chest chest = (Chest) currTile;
 				chest.giveMoney(this);
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			} else if (currTile instanceof GoToJailTile) {
+				// Player is sent to the jail
 				GoToJailTile goToJailTile = (GoToJailTile) currTile;
 				goToJailTile.send(this);
 				gamePanel.nextTurn();
 			} else if (currTile instanceof MedicalBillTile) {
+				// Player pays 1/10 medical bill
 				MedicalBillTile medicalBillTile = (MedicalBillTile) currTile;
 				medicalBillTile.billFee(this, gamePanel.getChest());
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			} else if (currTile instanceof ChanceCardTile) {
+				// Player gets random card
 				ChanceCardTile chanceCardTile = (ChanceCardTile) currTile;
 				chanceCardTile.randomCard(this);
 			} else if (currTile instanceof JailTile) {
@@ -250,6 +279,7 @@ public class Player {
 			System.out.println(getName() + " moved to " + currTile.getName());
 
 		} else {
+			// Pass the start condition resolves here
 			if (currTile instanceof StartTile) {
 				StartTile startTile = (StartTile) currTile;
 				startTile.giveSalary(this);

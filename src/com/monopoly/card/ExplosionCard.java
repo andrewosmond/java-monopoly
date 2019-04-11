@@ -24,7 +24,7 @@ public class ExplosionCard extends Card{
 			}
 		}
 		
-		Property desProperty = tempProperty.get((int)(Math.random() * (tempProperty.size() + 1)));
+		Property desProperty = tempProperty.get((int)(Math.random() * tempProperty.size()));
 		
 		if (desProperty instanceof City) {
 			((City)desProperty).setLandBought(false);

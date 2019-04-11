@@ -60,15 +60,16 @@ public class ChanceCardTile extends Tiles{
 		CardWindow.getInstance().view(cardResult, gamePanel);
 		
 		if (cardResult instanceof IndirectCard) {
+			// Have no card, save the card directly
 			if (p.getCard() == null) {
 				p.setCard(cardResult);
+			// User may choose to keep/discard the card
 			} else {
 				int input = JOptionPane.showConfirmDialog(null, "Do you want to keep " + cardResult.getName() + " ?", "Confirmation", JOptionPane.YES_NO_OPTION);
 				if (input == 0) {
 					p.setCard(cardResult);
 				}
 			}
-			
 		} else {
 			cardResult.effect(gamePanel, p);
 		}

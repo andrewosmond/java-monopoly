@@ -38,10 +38,8 @@ public class BuyCityButtonPanel extends JPanel implements ActionListener {
 			Player player = buyCityPanel.getPlayer();
 			player.setMoney(player.getMoney() - buyCityPanel.getTotalPrice());
 			city.setOwner(player);
-			
-			if (!player.getPropertyList().contains(city)) {
-				player.addProperty(city);
-			}
+		
+			player.addProperty(city);
 			
 			if (!city.isLandBought()) city.setLandBought(true);
 			if (buyCityPanel.isChbHouseSelected()) city.setHouseBought(true);
