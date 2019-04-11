@@ -57,3 +57,7 @@ Edrio :
 ## 11 April 2019
 Andrew : 
 - Code : Perbaikan validasi code saat bermain monopoly
+
+Edrio :
+- Assets : Logo.png
+- Code : Tampilan logo awal
