@@ -50,3 +50,10 @@ Andrew :
 ## 10 April 2019
 Andrew :
 - Code : Logic looping game (turn) sudah dapat berfungsi dan perbaikan code.
+
+Edrio :
+- Assets : Sprites kartu
+
+## 11 April 2019
+Andrew : 
+- Code : Perbaikan validasi code saat bermain monopoly
