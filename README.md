@@ -2,7 +2,7 @@
 
 Class Diagram :
 
-![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/MonopolyClassDiagram.JPG)
+![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/SekaiMonopoly%20Class%20Diagram.jpg)
 
 ## Deskripsi Tema :
 
@@ -56,6 +56,7 @@ Edrio :
 
 ## 11 April 2019
 Andrew : 
+- Class Diagram : Membuat class diagram versi 11/04/2019
 - Code : Perbaikan validasi code saat bermain monopoly
 
 Edrio :
