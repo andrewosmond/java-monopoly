@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.Vector;
 
 import com.monopoly.main.GamePanel;
+import com.monopoly.model.Tiles.CHARADIR;
 
 public class Board{
 	private Vector<Tiles> tilesList;
@@ -24,7 +25,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Papua")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Tokyo")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Sydney")));
-		tilesList.add(new ChanceCardTile(gamePanel));
+		tilesList.add(new ChanceCardTile(gamePanel, CHARADIR.RIGHT, 239, 144));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Singapore")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Bali")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Sao Paulo")));
@@ -32,7 +33,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Prague")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Hawaii")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Berlin")));
-		tilesList.add(new ChanceCardTile(gamePanel));
+		tilesList.add(new ChanceCardTile(gamePanel, CHARADIR.RIGHT, 640, 143));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Moscow")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Geneva")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Rome")));
@@ -40,7 +41,7 @@ public class Board{
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Bintan")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("London")));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Paris")));
-		tilesList.add(new ChanceCardTile(gamePanel));
+		tilesList.add(new ChanceCardTile(gamePanel, CHARADIR.LEFT, 674, 384));
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("New York")));
 		tilesList.add(gamePanel.getMedicalBillTile());
 		tilesList.add(gamePanel.getPropertyList().get(gamePanel.getPropertyIndex("Jakarta")));

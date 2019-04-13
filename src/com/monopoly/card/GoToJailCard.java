@@ -13,6 +13,7 @@ public class GoToJailCard extends Card{
 	public void effect(GamePanel gamePanel, Player user) {
 		user.setCurrTile(gamePanel.getJailTile());
 		user.setJailDuration(3);
+		gamePanel.nextTurn();
 	}
 
 }

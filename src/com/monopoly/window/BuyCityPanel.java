@@ -80,6 +80,12 @@ public class BuyCityPanel extends JPanel implements ItemListener {
 		chbBuilding.setSelected(false);
 		chbHotel.setSelected(false);
 		
+		lblTotalPrice.setText(MoneyFormatter.getFormat(getTotalPrice()));
+		if (getTotalPrice() > player.getMoney())
+			buyCityWindow.getButtonPanel().getBtnBuy().setEnabled(false);
+		else 
+			buyCityWindow.getButtonPanel().getBtnBuy().setEnabled(true);
+		
 		if (city.isLandBought())
 			lblLandStatus.setText("Owned");
 		else
@@ -113,7 +119,7 @@ public class BuyCityPanel extends JPanel implements ItemListener {
 		lblHousePrice.setText(MoneyFormatter.getFormat(city.getHousePrice()));
 		lblBuildingPrice.setText(MoneyFormatter.getFormat(city.getBuildingPrice()));
 		lblHotelPrice.setText(MoneyFormatter.getFormat(city.getHotelPrice()));
-		lblTotalPrice.setText("0");
+		lblTotalPrice.setText(MoneyFormatter.getFormat(getTotalPrice()));
 	}
 	
 	public City getCity() {

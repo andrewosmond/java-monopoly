@@ -14,7 +14,8 @@ public class CharityCard extends Card {
 		long money;
 
 		for (Player player : gamePanel.getPlayerList()) {
-			if (!player.equals(user)) {
+			if (user != player) {
+				if (player.isBankrupt()) continue;
 				money = player.getMoney() / 10;
 				player.setMoney(player.getMoney() - money);
 				user.setMoney(user.getMoney() + money);

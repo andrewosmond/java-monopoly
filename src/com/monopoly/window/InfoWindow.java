@@ -66,6 +66,7 @@ public class InfoWindow extends JFrame {
 		case START:
 			setTitle("Start Information");
 			break;
+		default: break;
 		}
 		repaint();
 		setVisible(true);

@@ -25,10 +25,8 @@ import com.monopoly.card.GoToJailCard;
 import com.monopoly.card.GoToHospitalCard;
 import com.monopoly.card.GoToStartCard;
 import com.monopoly.card.VIPCard;
-import com.monopoly.main.GamePanel.STATE;
 import com.monopoly.model.Board;
 import com.monopoly.model.ChanceCardTile;
-import com.monopoly.model.Character;
 import com.monopoly.model.Chest;
 import com.monopoly.model.City;
 import com.monopoly.model.Dice;
@@ -40,6 +38,7 @@ import com.monopoly.model.Player;
 import com.monopoly.model.Property;
 import com.monopoly.model.Scoreboard;
 import com.monopoly.model.StartTile;
+import com.monopoly.model.Tiles.CHARADIR;
 import com.monopoly.utility.TilesButton;
 import com.monopoly.window.BuyCityWindow;
 import com.monopoly.window.CardWindow;
@@ -56,10 +55,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	};
 	
 	public static enum GAMESTATE {
-		TURNSTART, INJAIL, ROLL, ROLLING, MOVE, MOVING, TURNEND
+		TURNSTART, INJAIL, ROLL, ROLLING, MOVE, MOVING, TURNEND, WINSCREEN
 	};
 
-	private static STATE currState = STATE.LOGO;
+	private static STATE currState = STATE.MENU;
 	private static STATE prevState = null;
 	private static GAMESTATE gameState = null;
 
@@ -70,6 +69,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private int turn = 0;
 	private int doubleCounter = 0;
 	private int diceRolled = 1;
+	private int turnCounter = 0;
+	private final int turnLimit = 30;
 	private long rentFee;
 
 	// assets
@@ -78,15 +79,19 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private ImageIcon imgProperty = new ImageIcon("assets/property.png");
 	private ImageIcon imgTitle = new ImageIcon("assets/titleBG.jpg");
 	private ImageIcon imgTransition = new ImageIcon("assets/transition.gif");
+	private ImageIcon imgWinScreen = new ImageIcon("assets/winScreen.png");
+	
+	// frames
+	private int winScreenFrame = 0;
+	private long prevTime = 0;
 
 	// coordinate
 	private int coorX;
 	private int coorY;
-
+	
 	// objects
 	private LogoAnimation la;
 	
-	private Vector<Character> characterList;
 	private Vector<Player> playerList;
 	private Vector<Property> propertyList;
 	private Vector<Card> cardList;
@@ -106,15 +111,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private CreatePlayerWindow createPlayerWindow;
 	private JailEscapeWindow jailEscapeWindow;
 	
-
-	
 	public GamePanel() {
 		setLayout(null);
 		setFocusable(true);
 
 		la = new LogoAnimation();
 		
-		characterList = new Vector<Character>();
 		playerList = new Vector<Player>();
 		propertyList = new Vector<Property>();
 		initProperty();
@@ -122,12 +124,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		initCard();
 		
 		dice = new Dice(this);
-		chanceCardTile = new ChanceCardTile(this);
-		chest = new Chest();
-		goToJailTile = new GoToJailTile(this);
-		jailTile = new JailTile();
-		medicalBillTile = new MedicalBillTile();
-		startTile = new StartTile();
+		chanceCardTile = new ChanceCardTile(this, CHARADIR.LEFT, 336, 438);
+		chest = new Chest(this, CHARADIR.RIGHT, 440, 21);
+		goToJailTile = new GoToJailTile(this, CHARADIR.LEFT, 879, 268);
+		jailTile = new JailTile(this, CHARADIR.RIGHT, 38, 259);
+		medicalBillTile = new MedicalBillTile(this, CHARADIR.LEFT, 577, 440);
+		startTile = new StartTile(this, CHARADIR.LEFT, 456, 503);
 		board = new Board(this);
 		scoreboard = new Scoreboard(this);
 		tilesButton = new TilesButton(this);
@@ -185,39 +187,30 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		return playerList;
 	}
 
-	public Character getCharacterByName(String name) {
-		for (Character character : characterList) {
-			if (character.getName().equals(name)) {
-				return character;
-			}
-		}
-		return null;
-	}
-
 	public void initProperty() {
-		propertyList.add(new City(Property.DIRECTION.LEFT, 431, 493, 0, 0, "Beijing", 20000, 10000, 30000, 50000, 50000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 329, 435, 0, 1, "Bangkok", 26000, 10000, 30000, 50000, 50000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 230, 377, 0, 2, "Taipei", 48000, 20000, 60000, 100000, 100000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 178, 347, 0, 3, "New Delhi", 54000, 20000, 60000, 100000, 100000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 128, 318, 0, 4, "Seoul", 60000, 20000, 60000, 100000, 100000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 143, 224, 0, 5, "Tokyo", 72000, 30000, 90000, 150000, 150000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 190, 194, 1, 0, "Sydney", 72000, 30000, 90000, 150000, 150000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 292, 136, 1, 1, "Singapore", 94000, 40000, 120000, 200000, 200000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 392, 77, 1, 2, "Sao Paulo", 100000, 40000, 120000, 200000, 200000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 547, 76, 1, 3, "Prague", 118000, 50000, 150000, 250000, 250000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 648, 134, 1, 4, "Berlin", 124000, 50000, 150000, 250000, 250000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 749, 193, 1, 5, "Moscow", 140000, 60000, 180000, 300000, 300000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 796, 222, 2, 0, "Geneva", 146000, 60000, 180000, 300000, 300000));
-		propertyList.add(new City(Property.DIRECTION.LEFT, 847, 250, 2, 1, "Rome", 146000, 60000, 180000, 300000, 300000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 758, 348, 2, 2, "London", 164000, 70000, 210000, 350000, 350000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 711, 376, 2, 3, "Paris", 170000, 70000, 210000, 350000, 350000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 610, 434, 2, 4, "New York", 192000, 80000, 240000, 400000, 400000));
-		propertyList.add(new City(Property.DIRECTION.RIGHT, 510, 493, 2, 5, "Jakarta", 200000, 80000, 240000, 400000, 400000));
-		propertyList.add(new Island(Property.DIRECTION.LEFT, 280, 406, 3, 0, "Phuket", 70500));
-		propertyList.add(new Island(Property.DIRECTION.RIGHT, 340, 108, 3, 1, "Bali", 70500));
-		propertyList.add(new Island(Property.DIRECTION.RIGHT, 92, 254, 3, 2, "Papua", 70500));
-		propertyList.add(new Island(Property.DIRECTION.LEFT, 596, 105, 3, 3, "Hawaii", 70500));
-		propertyList.add(new Island(Property.DIRECTION.RIGHT, 810, 319, 3, 4, "Bintan", 70500));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 431, 493, 0, 0, CHARADIR.LEFT, 386, 470, "Beijing", 20000, 10000, 30000, 50000, 50000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 329, 435, 0, 1, CHARADIR.LEFT, 287, 415, "Bangkok", 26000, 10000, 30000, 50000, 50000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 230, 377, 0, 2, CHARADIR.LEFT, 184, 354, "Taipei", 48000, 20000, 60000, 100000, 100000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 178, 347, 0, 3, CHARADIR.LEFT, 136, 325, "New Delhi", 54000, 20000, 60000, 100000, 100000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 128, 318, 0, 4, CHARADIR.LEFT, 85, 297, "Seoul", 60000, 20000, 60000, 100000, 100000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 143, 224, 0, 5, CHARADIR.RIGHT, 140, 203, "Tokyo", 72000, 30000, 90000, 150000, 150000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 190, 194, 1, 0, CHARADIR.RIGHT, 188, 174, "Sydney", 72000, 30000, 90000, 150000, 150000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 292, 136, 1, 1, CHARADIR.RIGHT, 291, 115, "Singapore", 94000, 40000, 120000, 200000, 200000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 392, 77, 1, 2, CHARADIR.RIGHT, 388, 56, "Sao Paulo", 100000, 40000, 120000, 200000, 200000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 547, 76, 1, 3, CHARADIR.RIGHT, 488, 54, "Prague", 118000, 50000, 150000, 250000, 250000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 648, 134, 1, 4, CHARADIR.RIGHT, 590,114, "Berlin", 124000, 50000, 150000, 250000, 250000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 749, 193, 1, 5, CHARADIR.RIGHT, 695, 172, "Moscow", 140000, 60000, 180000, 300000, 300000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 796, 222, 2, 0, CHARADIR.RIGHT, 740, 201, "Geneva", 146000, 60000, 180000, 300000, 300000, this));
+		propertyList.add(new City(Property.DIRECTION.LEFT, 847, 250, 2, 1, CHARADIR.RIGHT, 790, 228, "Rome", 146000, 60000, 180000, 300000, 300000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 758, 348, 2, 2, CHARADIR.LEFT, 775, 326, "London", 164000, 70000, 210000, 350000, 350000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 711, 376, 2, 3, CHARADIR.LEFT, 723, 355, "Paris", 170000, 70000, 210000, 350000, 350000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 610, 434, 2, 4, CHARADIR.LEFT, 625, 411, "New York", 192000, 80000, 240000, 400000, 400000, this));
+		propertyList.add(new City(Property.DIRECTION.RIGHT, 510, 493, 2, 5, CHARADIR.LEFT, 526,472, "Jakarta", 200000, 80000, 240000, 400000, 400000, this));
+		propertyList.add(new Island(Property.DIRECTION.LEFT, 280, 406, 3, 0, CHARADIR.LEFT, 237,385, "Phuket", 70500, this));
+		propertyList.add(new Island(Property.DIRECTION.RIGHT, 340, 108, 3, 1, CHARADIR.RIGHT, 337, 87, "Bali", 70500, this));
+		propertyList.add(new Island(Property.DIRECTION.RIGHT, 92, 254, 3, 2, CHARADIR.RIGHT, 89, 231, "Papua", 70500, this));
+		propertyList.add(new Island(Property.DIRECTION.LEFT, 596, 105, 3, 3, CHARADIR.RIGHT, 536, 84, "Hawaii", 70500, this));
+		propertyList.add(new Island(Property.DIRECTION.RIGHT, 810, 319, 3, 4, CHARADIR.LEFT, 824, 298, "Bintan", 70500, this));
 	}
 
 	public Vector<Property> getPropertyList() {
@@ -255,6 +248,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 
 	public Board getBoard() {
 		return board;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 	public ChanceCardTile getChanceCardTile() {
@@ -335,10 +332,24 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	}
 	
 	public void nextTurn() {
+		currPlayer.getCharacter().end();
 		turn++;
 		turn = turn % playerList.size();
 		doubleCounter = 0;
 		gameState = GAMESTATE.TURNSTART;
+	}
+	
+	public boolean isGameOver() {
+		int result = 0;
+		for (Player player : playerList) {
+			if (player.isBankrupt()) continue;
+			result++;
+		}
+		if (result == 1 || turnCounter > turnLimit) {
+			gameState = GAMESTATE.WINSCREEN;
+			return true;
+		}
+		return false;
 	}
 
 	public void run() {
@@ -347,24 +358,35 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 			repaint();
 			
 			if (currState == STATE.GAME) {
-				if (gameState == GAMESTATE.TURNSTART) {
-					chest.increaseMoney();
-					currPlayer = playerList.get(turn);
-					jailTile.decrementDuration(currPlayer);
-					if (currPlayer.isInJail()) {
-						gameState = GAMESTATE.INJAIL;
-						jailEscapeWindow.view(currPlayer);
-					} else {
-						gameState = GAMESTATE.ROLL;
+				if (gameState == GAMESTATE.WINSCREEN) {
+					if (System.currentTimeMillis() - prevTime > 150) {
+						prevTime = System.currentTimeMillis();
+						winScreenFrame++;
+						winScreenFrame = winScreenFrame % 5; 
 					}
-				}
-	
-				if (gameState == GAMESTATE.MOVE) {
-					//Call character render
+				} else if (gameState == GAMESTATE.TURNSTART) {
+					if (turn == 0) turnCounter++;
+					if (!isGameOver()) {
+						currPlayer = playerList.get(turn);
+						
+						if (currPlayer.isBankrupt()) {
+							nextTurn();
+						} else {
+							currPlayer.getCharacter().start();
+							chest.increaseMoney();
+							jailTile.decrementDuration(currPlayer);
+							if (currPlayer.isInJail()) {
+								gameState = GAMESTATE.INJAIL;
+								jailEscapeWindow.view(currPlayer);
+							} else {
+								gameState = GAMESTATE.ROLL;
+							}
+						}
+					}
+				} else if (gameState == GAMESTATE.MOVE) {
 					gameState = GAMESTATE.MOVING;
-				}
-				
-				if (gameState == GAMESTATE.TURNEND) {
+					currPlayer.move();
+				} else if (gameState == GAMESTATE.TURNEND) {
 					if (doubleCounter == 3) {
 						jailTile.jailPlayer(playerList.get(turn));
 						nextTurn();
@@ -390,7 +412,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	public void displayCurrentTurn(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 20));
-		g.drawString("Current Turn", 1087, 120);
+		String turnText = String.format("Current Turn (%d/%d)", turnCounter, turnLimit);
+		g.drawString(turnText, 1016 + (258-8*turnText.length())/2, 120);
 		int x = playerList.get(turn).getName().length();
 		g.drawString(playerList.get(turn).getName(), 1016 + (258-12*x)/2, 148);
 	}
@@ -421,24 +444,34 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 			g.drawImage(imgTitle.getImage(), 0, 0, null);
 			prevState = currState;
 		} else if (currState == STATE.GAME) {
+			if (gameState == GAMESTATE.WINSCREEN) {
+				setTilesButton(false);
+				int w = imgWinScreen.getIconWidth();
+				int h = imgWinScreen.getIconHeight() / 5;
+				g.setColor(Color.WHITE);
+				g.fillRect(0, 0, 1280, 720);
+				g.drawImage(imgWinScreen.getImage(), 0, 0, w, h, 0, winScreenFrame*h, w, winScreenFrame*h + h, null);
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Calibri", Font.BOLD, 80));
+				String name = scoreboard.getFirstPlayer().getName();
+				g.drawString(name, (1274-(30*name.length()))/2, 256);
+			} else {
+				displayCurrentTurn(g);
+				board.render(g);
+				chest.render(g);
+				dice.render(g);
+				scoreboard.render(g);
+				for (Player player : playerList) {
+					if (player.isBankrupt()) continue;
+					player.getCharacter().render(g);
+				}
+				if (gameState == GAMESTATE.ROLL) displayRollButton(g);
+			}
+			
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
 			g.drawString("Cursor Coordinate : ", 1080, 575);
-
 			g.drawString("X : " + coorX + " Y: " + coorY, 1080, 605);
 			
-			displayCurrentTurn(g);
-			board.render(g);
-			chest.render(g);
-			dice.render(g);
-			scoreboard.render(g);
-		
-			if (gameState == GAMESTATE.ROLL) {
-				displayRollButton(g);
-			}
-			
-			if (gameState == GAMESTATE.MOVING) {
-				currPlayer.move(g);
-			}
 			prevState = currState;
 		} else if (currState == STATE.TRANSITION) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -467,9 +500,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		coorY = e.getY();
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	public void mouseEntered(MouseEvent e) {}
 
@@ -504,15 +535,16 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	public void mouseReleased(MouseEvent e) {}
 
 	public void keyPressed(KeyEvent e) {
-		if (currState == STATE.TRANSITION) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_ENTER:
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_ENTER:
+			if (currState == STATE.TRANSITION)
 				currState = STATE.MENU;
-				break;
-			default:
-				currState = STATE.TRANSITION;
-				break;
+			else if (currState == STATE.GAME) {
+				if (gameState == GAMESTATE.WINSCREEN) 
+					currState = STATE.MENU;
 			}
+			break;
+		default: break;
 		}
 	}
 

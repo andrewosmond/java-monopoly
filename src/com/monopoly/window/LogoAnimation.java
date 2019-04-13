@@ -5,8 +5,6 @@ import java.awt.Graphics;
 
 import javax.swing.ImageIcon;
 
-import com.monopoly.main.GamePanel;
-
 public class LogoAnimation {
 	private ImageIcon logo = new ImageIcon("assets/logo.png");
 	

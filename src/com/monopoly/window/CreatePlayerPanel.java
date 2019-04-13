@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class CreatePlayerPanel extends JPanel implements ItemListener{
 	private Integer[] arrNumOfPlayer = { 2, 3, 4 };
-	private String[] arrCharacterName = { "A", "B", "C", "D" };
+	private String[] arrCharacterName = { "Claire", "Harold", "Barton", "Michael" };
 	private JComboBox cmbNumOfPlayer;
 	private JComboBox[] cmbCharacter = new JComboBox[4];
 

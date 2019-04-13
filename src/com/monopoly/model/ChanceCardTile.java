@@ -11,12 +11,14 @@ import com.monopoly.main.GamePanel;
 import com.monopoly.window.CardWindow;
 
 public class ChanceCardTile extends Tiles{
-	private GamePanel gamePanel = null;
 	private Random rand = new Random();
 
-	public ChanceCardTile(GamePanel gamePanel) {
-		this.gamePanel = gamePanel;
+	public ChanceCardTile(GamePanel gamePanel, CHARADIR charaDir, int tileCoorX, int tileCoorY) {
 		this.name = "Chance Card";
+		this.gamePanel = gamePanel;
+		this.charaDir = charaDir;
+		this.tileCoorX = tileCoorX;
+		this.tileCoorY = tileCoorY;
 	}
 	
 	public int random(int min, int max) {
@@ -73,5 +75,11 @@ public class ChanceCardTile extends Tiles{
 		} else {
 			cardResult.effect(gamePanel, p);
 		}
+	}
+
+	@Override
+	public void event(Player player) {
+		// Player gets random card
+		randomCard(player);
 	}
 }

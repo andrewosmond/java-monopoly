@@ -6,9 +6,9 @@ import com.monopoly.main.GamePanel;
 
 public abstract class Property extends Tiles{
 	protected Player owner;
-	protected DIRECTION direction;
-	protected int coorX;
-	protected int coorY;
+	protected DIRECTION buildDir;
+	protected int buildCoorX;
+	protected int buildCoorY;
 	protected int tilesRow;
 	protected int tilesCol;
 	protected int multiplier;
@@ -46,16 +46,16 @@ public abstract class Property extends Tiles{
 		this.owner = owner;
 	}
 	
-	public DIRECTION getDirection() {
-		return direction;
+	public DIRECTION getBuildDir() {
+		return buildDir;
 	}
 	
-	public int getCoorX() {
-		return coorX;
+	public int getBuildCoorX() {
+		return buildCoorX;
 	}
 	
-	public int getCoorY() {
-		return coorY;
+	public int getBuildCoorY() {
+		return buildCoorY;
 	}
 	
 	public int getMultiplier() {

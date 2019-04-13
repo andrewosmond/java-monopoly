@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 
 import com.monopoly.main.GamePanel;
 import com.monopoly.main.GamePanel.GAMESTATE;
+import com.monopoly.model.Board;
+import com.monopoly.model.Character;
 import com.monopoly.model.Player;
 
 @SuppressWarnings("serial")
@@ -37,9 +39,14 @@ public class CreatePlayerButtonPanel extends JPanel implements ActionListener {
 					return;
 				}
 				
+				gamePanel.getPropertyList().clear();
+				gamePanel.initProperty();
+				gamePanel.setBoard(new Board(gamePanel));
 				gamePanel.getPlayerList().clear();
 				for (int i = 0; i < playerPanel.getNumOfPlayer(); i++) {
-					Player p = new Player(playerPanel.getPlayerNames().get(i), gamePanel.getCharacterByName(playerPanel.getCharacterNames().get(i)), gamePanel);
+					Character c = new Character(playerPanel.getCharacterNames().get(i));
+					Player p = new Player(playerPanel.getPlayerNames().get(i), c, gamePanel);
+					c.setPlayer(p);
 					gamePanel.getPlayerList().add(p);
 				}
 				

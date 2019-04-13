@@ -10,6 +10,7 @@ import javax.swing.JRadioButton;
 import com.monopoly.card.RedemptionCard;
 import com.monopoly.model.Player;
 
+@SuppressWarnings("serial")
 public class JailEscapePanel extends JPanel {
 	private JLabel lblTurnLeft;
 	private JRadioButton rdbRollDouble;
@@ -23,7 +24,7 @@ public class JailEscapePanel extends JPanel {
 		lblTurnLeft = new JLabel();
 		rdbRollDouble = new JRadioButton("Roll Double");
 		rdbPayFee = new JRadioButton("Pay 200K");
-		rdbEscapeCard = new JRadioButton("Use Escape Card");
+		rdbEscapeCard = new JRadioButton("Use Redemption Card");
 		add(lblTurnLeft);
 		add(new JLabel());
 		add(new JLabel());
