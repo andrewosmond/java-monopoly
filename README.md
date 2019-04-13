@@ -62,3 +62,11 @@ Andrew :
 Edrio :
 - Assets : Logo.png
 - Code : Tampilan logo awal
+
+## 12 April 2019
+Andrew :
+- Code : 
+- Fitur limit selama 30 cycle turn
+- Validasi game berakhir ketika hanya tinggal 1 org yang tersisa
+- Karakter hanya bergerak di giliran pemain, sedangkan pemain yg idle (karakternya lebih transparan).
+- Tampilan winscreen setelah permainan selesai (dapat menekan enter untuk kembali ke menu).
