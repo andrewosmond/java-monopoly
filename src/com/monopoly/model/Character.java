@@ -16,10 +16,10 @@ public class Character implements Runnable {
 	
 	public Character(String charaName) {
 		switch(charaName) {
-		case "Claire": imgChara = new ImageIcon("assets/char1.png"); break;
-		case "Harold": imgChara = new ImageIcon("assets/char2.png"); break;
-		case "Barton": imgChara = new ImageIcon("assets/char3.png"); break;
-		case "Michael": imgChara = new ImageIcon("assets/char3.png"); break;
+		case "Claire": imgChara = new ImageIcon("assets/characters/char1.png"); break;
+		case "Harold": imgChara = new ImageIcon("assets/characters/char2.png"); break;
+		case "Barton": imgChara = new ImageIcon("assets/characters/char3.png"); break;
+		case "Michael": imgChara = new ImageIcon("assets/characters/char3.png"); break;
 		}
 	}
 	

@@ -14,8 +14,8 @@ import javax.swing.JTextField;
 public class CreatePlayerPanel extends JPanel implements ItemListener{
 	private Integer[] arrNumOfPlayer = { 2, 3, 4 };
 	private String[] arrCharacterName = { "Claire", "Harold", "Barton", "Michael" };
-	private JComboBox cmbNumOfPlayer;
-	private JComboBox[] cmbCharacter = new JComboBox[4];
+	private JComboBox<Integer> cmbNumOfPlayer = null;
+	private JComboBox<String>[] cmbCharacter = null;
 
 	private JLabel lblNumOfPlayer = new JLabel("Num of Player");
 	private JLabel lblPlayer = new JLabel("Player");
@@ -28,12 +28,14 @@ public class CreatePlayerPanel extends JPanel implements ItemListener{
 
 	private JTextField[] txtName = new JTextField[4];
 
+	@SuppressWarnings("unchecked")
 	public CreatePlayerPanel() {
 		setLayout(new GridLayout(7, 3));
 
-		cmbNumOfPlayer = new JComboBox(arrNumOfPlayer);
+		cmbNumOfPlayer = new JComboBox<>(arrNumOfPlayer);
+		cmbCharacter = new JComboBox[4];
 		for (int i = 0; i < 4; i++) {
-			cmbCharacter[i] = new JComboBox(arrCharacterName);
+			cmbCharacter[i] = new JComboBox<>(arrCharacterName);
 			txtName[i] = new JTextField();
 		}
 

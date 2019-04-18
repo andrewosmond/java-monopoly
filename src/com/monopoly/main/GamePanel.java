@@ -39,6 +39,7 @@ import com.monopoly.model.Property;
 import com.monopoly.model.Scoreboard;
 import com.monopoly.model.StartTile;
 import com.monopoly.model.Tiles.CHARADIR;
+import com.monopoly.utility.JukeBox;
 import com.monopoly.utility.TilesButton;
 import com.monopoly.window.BuyCityWindow;
 import com.monopoly.window.CardWindow;
@@ -48,7 +49,6 @@ import com.monopoly.window.LogoAnimation;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable {
-
 	// game status enumeration
 	public static enum STATE {
 		TRANSITION, CREATEPLAYER, GAME, HELP, MENU, LOGO
@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		TURNSTART, INJAIL, ROLL, ROLLING, MOVE, MOVING, TURNEND, WINSCREEN
 	};
 
-	private static STATE currState = STATE.MENU;
+	private static STATE currState = STATE.LOGO;
 	private static STATE prevState = null;
 	private static GAMESTATE gameState = null;
 
@@ -74,12 +74,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private long rentFee;
 
 	// assets
-	private ImageIcon imgDice = new ImageIcon("assets/dice.png");
-	private ImageIcon imgMap = new ImageIcon("assets/map.png");
-	private ImageIcon imgProperty = new ImageIcon("assets/property.png");
-	private ImageIcon imgTitle = new ImageIcon("assets/titleBG.jpg");
-	private ImageIcon imgTransition = new ImageIcon("assets/transition.gif");
-	private ImageIcon imgWinScreen = new ImageIcon("assets/winScreen.png");
+	private ImageIcon imgDice = new ImageIcon("assets/dice/dice.png");
+	private ImageIcon imgMap = new ImageIcon("assets/map/map.png");
+	private ImageIcon imgProperty = new ImageIcon("assets/property/property.png");
+	private ImageIcon imgTitle = new ImageIcon("assets/background/titleBG.jpg");
+	private ImageIcon imgTransition = new ImageIcon("assets/background/transition.gif");
+	private ImageIcon imgWinScreen = new ImageIcon("assets/background/winScreen.png");
 	
 	// frames
 	private int winScreenFrame = 0;
@@ -139,6 +139,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		cardWindow = CardWindow.getInstance();
 		createPlayerWindow = new CreatePlayerWindow(this);
 		jailEscapeWindow = new JailEscapeWindow(this);
+		
+		JukeBox.init();
+		JukeBox.load("/musics/scarlet.mp3", "music1");
+		JukeBox.setVolume("music1", -10);
+		JukeBox.loop("music1", 1000, 1000, JukeBox.getFrames("music1") - 1000);
 		
 		addKeyListener(this);
 		addMouseListener(this);
@@ -331,6 +336,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		return currPlayer;
 	}
 	
+	public void setTurnCounter(int turnCounter) {
+		this.turnCounter = turnCounter;
+	}
+	
 	public void nextTurn() {
 		currPlayer.getCharacter().end();
 		turn++;
@@ -384,15 +393,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 						}
 					}
 				} else if (gameState == GAMESTATE.MOVE) {
-					gameState = GAMESTATE.MOVING;
-					currPlayer.move();
-				} else if (gameState == GAMESTATE.TURNEND) {
+					if (dice.isDouble()) doubleCounter++;
 					if (doubleCounter == 3) {
 						jailTile.jailPlayer(playerList.get(turn));
 						nextTurn();
-					} else if (dice.isDouble()) {
+					} else {
+						gameState = GAMESTATE.MOVING;
+						currPlayer.move();
+					}
+				} else if (gameState == GAMESTATE.TURNEND) {
+					if (dice.isDouble()) {
 						gameState = GAMESTATE.ROLL;
-						doubleCounter++;
 					} else {
 						nextTurn();
 					}
@@ -455,6 +466,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				g.setFont(new Font("Calibri", Font.BOLD, 80));
 				String name = scoreboard.getFirstPlayer().getName();
 				g.drawString(name, (1274-(30*name.length()))/2, 256);
+				g.setFont(new Font("Helvetia", Font.BOLD, 50));
+				g.drawString("PRESS ENTER TO CONTINUE...", 250, 650);
 			} else {
 				displayCurrentTurn(g);
 				board.render(g);
@@ -467,11 +480,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				}
 				if (gameState == GAMESTATE.ROLL) displayRollButton(g);
 			}
-			
-			g.setFont(new Font("Calibri", Font.PLAIN, 20));
-			g.drawString("Cursor Coordinate : ", 1080, 575);
-			g.drawString("X : " + coorX + " Y: " + coorY, 1080, 605);
-			
 			prevState = currState;
 		} else if (currState == STATE.TRANSITION) {
 			g.setFont(new Font("Calibri", Font.PLAIN, 20));

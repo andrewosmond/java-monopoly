@@ -204,7 +204,7 @@ public class City extends Property {
 				gamePanel.setGameState(GAMESTATE.TURNEND);
 			}
 			// Have 3 buildings & no landmark
-			else if (landBought && houseBought && hotelBought) {
+			else if (houseBought && buildingBought && hotelBought) {
 				if (player.getMoney() >= landmarkPrice) {
 					int input = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + getName() + " to Landmark?",
 							"Confirmation", JOptionPane.YES_NO_OPTION);
@@ -263,7 +263,7 @@ public class City extends Property {
 							gamePanel.setGameState(GAMESTATE.TURNEND);
 						}
 						// Have 3 buildings & no landmark
-						else if (landBought && houseBought && hotelBought) {
+						else if (houseBought && buildingBought && hotelBought) {
 							if (player.getMoney() >= landmarkPrice) {
 								int input2 = JOptionPane.showConfirmDialog(null, "Do you want to upgrade " + getName() + " to Landmark?",
 										"Confirmation", JOptionPane.YES_NO_OPTION);

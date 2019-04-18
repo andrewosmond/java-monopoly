@@ -22,15 +22,15 @@ public class InfoWindow extends JFrame {
 	private STATE currState = null;
 	private Property property = null;
 	
-	private ImageIcon cityWindow = new ImageIcon("assets/cityInfoWindow.png");
-	private ImageIcon islandWindow = new ImageIcon("assets/islandInfoWindow.png");
-	private ImageIcon tilesSprite = new ImageIcon("assets/tiles.png");
-	private ImageIcon chanceCardWindow = new ImageIcon("assets/chanceCardWindow.png");
-	private ImageIcon chestWindow = new ImageIcon("assets/chestWindow.png");
-	private ImageIcon goToJailWindow = new ImageIcon("assets/goToJailWindow.png");
-	private ImageIcon jailWindow = new ImageIcon ("assets/jailWindow.png");
-	private ImageIcon medicalBillWindow = new ImageIcon ("assets/medicalBillWindow.png");
-	private ImageIcon startWindow = new ImageIcon("assets/startWindow.png");
+	private ImageIcon cityWindow = new ImageIcon("assets/window/cityInfoWindow.png");
+	private ImageIcon islandWindow = new ImageIcon("assets/window/islandInfoWindow.png");
+	private ImageIcon tilesSprite = new ImageIcon("assets/tiles/tiles.png");
+	private ImageIcon chanceCardWindow = new ImageIcon("assets/window/chanceCardWindow.png");
+	private ImageIcon chestWindow = new ImageIcon("assets/window/chestWindow.png");
+	private ImageIcon goToJailWindow = new ImageIcon("assets/window/goToJailWindow.png");
+	private ImageIcon jailWindow = new ImageIcon ("assets/window/jailWindow.png");
+	private ImageIcon medicalBillWindow = new ImageIcon ("assets/window/medicalBillWindow.png");
+	private ImageIcon startWindow = new ImageIcon("assets/window/startWindow.png");
 	
 	private InfoWindow() {
 		setSize(500, 400);

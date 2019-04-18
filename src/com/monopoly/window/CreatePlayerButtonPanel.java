@@ -39,6 +39,7 @@ public class CreatePlayerButtonPanel extends JPanel implements ActionListener {
 					return;
 				}
 				
+				gamePanel.setTurnCounter(0);
 				gamePanel.getPropertyList().clear();
 				gamePanel.initProperty();
 				gamePanel.setBoard(new Board(gamePanel));
