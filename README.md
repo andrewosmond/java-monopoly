@@ -71,3 +71,6 @@ Andrew :
 - Karakter hanya bergerak di giliran pemain, sedangkan pemain yg idle (karakternya lebih transparan).
 - Tampilan winscreen setelah permainan selesai (dapat menekan enter untuk kembali ke menu).
 - Fitur jual kota secara otomatis ketika uang pemain kurang untuk membayar sewa.
+
+## 18 April 2019
+Alexius : Character Sprite (chara 1 - 3)
