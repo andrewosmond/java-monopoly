@@ -13,6 +13,7 @@ import com.monopoly.main.GamePanel.GAMESTATE;
 import com.monopoly.model.Board;
 import com.monopoly.model.Character;
 import com.monopoly.model.Player;
+import com.monopoly.utility.JukeBox;
 
 @SuppressWarnings("serial")
 public class CreatePlayerButtonPanel extends JPanel implements ActionListener {
@@ -55,6 +56,8 @@ public class CreatePlayerButtonPanel extends JPanel implements ActionListener {
 				gamePanel.setCurrState(GamePanel.STATE.GAME);
 				gamePanel.setGameState(GAMESTATE.TURNSTART);
 				gamePanel.setTilesButton(true);
+				JukeBox.stop("musicMenu");
+				JukeBox.loop("musicGame", 1000, 1000, JukeBox.getFrames("musicGame") - 1000);
 				playerWindow.getFrame().setVisible(false);
 			}
 		}

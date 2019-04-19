@@ -141,9 +141,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		jailEscapeWindow = new JailEscapeWindow(this);
 		
 		JukeBox.init();
-		JukeBox.load("/musics/scarlet.mp3", "music1");
-		JukeBox.setVolume("music1", -10);
-		JukeBox.loop("music1", 1000, 1000, JukeBox.getFrames("music1") - 1000);
+		JukeBox.load("/musics/memory.mp3", "musicMenu");
+		JukeBox.setVolume("musicMenu", -10);
+		
+		JukeBox.load("/musics/scarlet.mp3", "musicGame");
+		JukeBox.setVolume("musicGame", -10);
+		
 		
 		addKeyListener(this);
 		addMouseListener(this);
@@ -355,6 +358,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 			result++;
 		}
 		if (result == 1 || turnCounter > turnLimit) {
+			JukeBox.stop("musicGame");
 			gameState = GAMESTATE.WINSCREEN;
 			return true;
 		}
@@ -545,8 +549,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_ENTER:
-			if (currState == STATE.TRANSITION)
+			if (currState == STATE.TRANSITION) {
 				currState = STATE.MENU;
+				JukeBox.loop("musicMenu", 1000, 1000, JukeBox.getFrames("musicMenu") - 1000);
+			}
 			else if (currState == STATE.GAME) {
 				if (gameState == GAMESTATE.WINSCREEN) 
 					currState = STATE.MENU;
