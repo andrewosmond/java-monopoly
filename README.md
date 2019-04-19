@@ -74,3 +74,11 @@ Andrew :
 
 ## 18 April 2019
 Alexius : Character Sprite (chara 1 - 3)
+
+## 19 April 2019
+Andrew : 
+- Code : Class JukeBox, Add library to play mp3
+
+Edrio :
+- Assets : scarlet.mp3, memory.mp3, Help.png, Help2.png
+- Code : Menu help
