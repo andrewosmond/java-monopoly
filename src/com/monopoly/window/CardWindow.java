@@ -18,7 +18,7 @@ public class CardWindow extends JFrame implements WindowListener{
 	private static CardWindow instance = new CardWindow();
 	private Card card = null;
 	private GamePanel gamePanel = null;
-	private ImageIcon imgCard = new ImageIcon("assets/card.png");
+	private ImageIcon imgCard = new ImageIcon("assets/card/card.png");
 			
 	private CardWindow() {
 		setSize(400,500);
