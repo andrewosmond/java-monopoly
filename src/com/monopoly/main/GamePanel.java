@@ -360,6 +360,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		}
 		if (result == 1 || turnCounter > turnLimit) {
 			JukeBox.stop("musicGame");
+			setFocusable(true);
 			gameState = GAMESTATE.WINSCREEN;
 			return true;
 		}
