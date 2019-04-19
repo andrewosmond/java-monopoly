@@ -51,7 +51,7 @@ import com.monopoly.window.LogoAnimation;
 public class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable {
 	// game status enumeration
 	public static enum STATE {
-		TRANSITION, CREATEPLAYER, GAME, HELP, MENU, LOGO
+		TRANSITION, CREATEPLAYER, GAME, HELP, HELP2, MENU, LOGO
 	};
 	
 	public static enum GAMESTATE {
@@ -80,6 +80,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 	private ImageIcon imgTitle = new ImageIcon("assets/background/titleBG.jpg");
 	private ImageIcon imgTransition = new ImageIcon("assets/background/transition.gif");
 	private ImageIcon imgWinScreen = new ImageIcon("assets/background/winScreen.png");
+	private ImageIcon imgHelpScreen = new ImageIcon("assets/background/Help.png");
+	private ImageIcon imgHelp2Screen = new ImageIcon("assets/background/Help2.png");
 	
 	// frames
 	private int winScreenFrame = 0;
@@ -499,6 +501,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				currState = STATE.TRANSITION;
 			}
 			la.draw(g);
+		} else if(currState == STATE.HELP) {
+			g.drawImage(imgHelpScreen.getImage(), 0, 0, null);
+			prevState = currState;
+		} else if(currState == STATE.HELP2) {
+			g.drawImage(imgHelp2Screen.getImage(), 0, 0, null);
+			prevState = currState;
 		}
 
 		g.dispose();
@@ -538,6 +546,20 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				if (coorX >= 1095 && coorX <= 1195 && coorY >= 500 && coorY <= 540) {
 					gameState = GAMESTATE.ROLLING;
 					dice.start();
+				}
+			}
+		} else if(currState == STATE.HELP || currState == STATE.HELP2) {
+			if (coorX >= 30 && coorX <= 224 && coorY >= 11 && coorY <= 75) {
+				currState = STATE.MENU;
+			}
+			if(currState == STATE.HELP) {
+				if (coorX >= 781 && coorX <= 1188 && coorY >= 92 && coorY <= 171) {
+					currState = STATE.HELP2;
+				}
+			}
+			if(currState == STATE.HELP2) {
+				if (coorX >= 89 && coorX <= 562 && coorY >= 92 && coorY <= 171) {
+					currState = STATE.HELP;
 				}
 			}
 		}
