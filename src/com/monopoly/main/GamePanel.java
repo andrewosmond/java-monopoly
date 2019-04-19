@@ -140,7 +140,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 		createPlayerWindow = new CreatePlayerWindow(this);
 		jailEscapeWindow = new JailEscapeWindow(this);
 		
-		JukeBox.init();
 		JukeBox.load("/musics/memory.mp3", "musicMenu");
 		JukeBox.setVolume("musicMenu", -10);
 		
