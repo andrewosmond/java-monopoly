@@ -576,8 +576,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 				JukeBox.loop("musicMenu", 1000, 1000, JukeBox.getFrames("musicMenu") - 1000);
 			}
 			else if (currState == STATE.GAME) {
-				if (gameState == GAMESTATE.WINSCREEN) 
-					currState = STATE.MENU;
+				if (gameState == GAMESTATE.WINSCREEN) {
+					currState = STATE.MENU;					
+					JukeBox.loop("musicMenu", 1000, 1000, JukeBox.getFrames("musicMenu") - 1000);
+				}
 			}
 			break;
 		default: break;
