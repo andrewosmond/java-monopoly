@@ -82,3 +82,9 @@ Andrew :
 Edrio :
 - Assets : scarlet.mp3, memory.mp3, Help.png, Help2.png
 - Code : Menu help
+
+## 20 April 2019
+Andrew :
+- Class Diagram [Updated]
+
+Alexius : Character Sprite (chara 4)
