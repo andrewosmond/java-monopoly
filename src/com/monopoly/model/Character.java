@@ -19,7 +19,7 @@ public class Character implements Runnable {
 		case "Claire": imgChara = new ImageIcon("assets/characters/char1.png"); break;
 		case "Harold": imgChara = new ImageIcon("assets/characters/char2.png"); break;
 		case "Barton": imgChara = new ImageIcon("assets/characters/char3.png"); break;
-		case "Michael": imgChara = new ImageIcon("assets/characters/char3.png"); break;
+		case "Michael": imgChara = new ImageIcon("assets/characters/char4.png"); break;
 		}
 	}
 	
