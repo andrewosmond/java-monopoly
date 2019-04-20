@@ -2,7 +2,7 @@
 
 Class Diagram :
 
-![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/SekaiMonopoly%20Class%20Diagram.jpg)
+![Class Diagram](https://github.com/andrewosmondcode/java-monopoly/blob/master/Sekai%20Monopoly%20Class%20Diagram%20%5BUpdated%5D.jpg)
 
 ## Deskripsi Tema :
 
