@@ -3,7 +3,6 @@ package com.monopoly.window;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,9 +11,7 @@ import com.monopoly.main.GamePanel;
 import com.monopoly.main.GamePanel.GAMESTATE;
 import com.monopoly.model.Player;
 
-public class JailEscapeWindow implements WindowListener{
-	private JFrame frame = null;
-	private GamePanel gamePanel = null;
+public class JailEscapeWindow extends Window{
 	private JailEscapePanel jailEscapePanel = null;
 	private JailEscapeButtonPanel jailEscapeButtonPanel = null;
 	

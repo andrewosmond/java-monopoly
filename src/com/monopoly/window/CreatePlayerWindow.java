@@ -3,16 +3,13 @@ package com.monopoly.window;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.monopoly.main.GamePanel;
 
-public class CreatePlayerWindow implements WindowListener{
-	private JFrame frame = null;
-	private GamePanel gamePanel = null;
+public class CreatePlayerWindow extends Window{
 
 	public CreatePlayerWindow(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
