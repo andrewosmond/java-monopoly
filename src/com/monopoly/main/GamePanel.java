@@ -408,10 +408,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Mou
 						currPlayer.move();
 					}
 				} else if (gameState == GAMESTATE.TURNEND) {
-					if (dice.isDouble()) {
-						gameState = GAMESTATE.ROLL;
-					} else {
-						nextTurn();
+					if (!isGameOver()) {
+						if (dice.isDouble()) {
+							gameState = GAMESTATE.ROLL;
+						} else {
+							nextTurn();
+						}
 					}
 				}		
 			}
